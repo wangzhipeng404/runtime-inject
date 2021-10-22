@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>react App</title>
+    <link rel="stylesheet" href="react-vant-index.css" />
+    <script src="./lib/react.production.min.js"></script>
+    <script src="./lib/react-dom.production.min.js"></script>
+    <script src="./lib/babel.standalone.min.js"></script>
+    <script>
+      window.react = React
+    </script>
+    <script src="./lib/react-vant.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      window.vant = window['react-vant']
+      const loadAppFun = (name,params = null) => {
+        const u = navigator.userAgent;
+        const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+        if(!isAndroid){
+          window.xpe_callEvent && xpe_callEvent(name, params, null);
+        }else{
+          if(params){
+            params = JSON.stringify(params);
+          }
+          pageObject.page_xpe_callEvent(name,params,null);
+        }
+      }
+      const xpeEventManager = {
+        events: {},
+        clean () {
+          this.events = {}
+        },
+        register (key, callback) {
+          if (!this.events[key]) {
+            this.events[key] = callback
+          } else {
+            throw new Error('key has been registered')
+          }
+        },
+        unregister (key) {
+          if (this.events[key]) {
+            this.events[key] = undefined
+          } else {
+            throw new Error('unregistered key')
+          }
+        },
+        trigger (key, data) {
+          if (this.events[key]) {
+            this.events[key](data)
+          } else {
+            throw new Error('key not find')
+          }
+        },
+        has (key) {
+          return !!this.events[key]
+        },
+      }
+      window.xpe_reciveData = function(data, key){
+        if(typeof data == 'string'){
+          data = JSON.parse(data);
+        }
+        console.log(data);
+        if (xpeEventManager.has(key)) {
+          xpeEventManager.trigger(key, data.data)
+          return
+        }
+      }
+      const cpstr = `
+        const [count, setCount] = React.useState(0)
+        return (
+          <antd.Button type="primary" onClick={() => setCount(count+1)}>{count}</antd.Button>
+        )
+      `
+      const App = (props) => {
+        const [fcstr, setFcstr] = React.useState(`return <div></div>;`)
+        const transformed = Babel.transform(`const Test = () => { ${fcstr} }`, { presets: ['es2015', 'react'] }).code;
+        const Comp = new Function(
+          `${transformed.replace('"use strict";\n', '')};return Test()`
+        )
+        React.useEffect(() => {
+          setTimeout(() => {
+            setFcstr(cpstr)
+          }, 1000)
+        }, [])
+        return <Comp />;
+      }
+      const domContainer = document.querySelector('#app');
+      ReactDOM.render(<App />, domContainer);
+    </script>
+  </body>
+</html>

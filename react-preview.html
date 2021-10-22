@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+    <title>react App</title>
+    <link rel="stylesheet" href="./lib/react-vant-index.css" />
+    <!-- <script src="./lib/react.production.min.js"></script>
+    <script src="./lib/react-dom.production.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.development.js"></script>
+    <script src="./lib/babel.standalone.min.js"></script>
+    <script>
+      window.react = React
+    </script>
+    <script src="./lib/vant-touch-emulator.js"></script>
+    <script src="./lib/react-vant.min.js"></script>
+    <script src="./lib/axios.min.js"></script>
+    <script src="./lib/dayjs.min.js"></script>
+    <script src="./lib/stylus.min.js"></script>
+    <style>
+      html::-webkit-scrollbar{
+        width: 0;
+      }
+    </style>
+    <style id="css"></style>
+  </head>
+  <body ontouchstart>
+    <div id="app"></div>
+    <script type="text/babel">
+      window.vant = window['react-vant']
+      const App = (props) => {
+        const [code, setCode] = React.useState(`return <div></div>;`)
+        const transformed = Babel.transform(`function Code () { ${code} }`, { presets: ['es2015', 'react'] }).code;
+        const Comp = new Function(
+          `${transformed.replace('"use strict";\n\n', '')} return Code()`
+        )
+        React.useEffect(() => {
+          console.log('react mounted')
+          window.addEventListener('message', e =>{
+            const { data, key } = e.data
+            if (!key) return
+            if (key === 'reload') {
+              window.location.reload()
+            }
+            if (key === 'setCode') {
+              setCode(data)
+            }
+            if (key === 'setStyle') {
+              if (data) {
+                const $style = document.createElement('style')
+                $style.innerText = stylus.render(data)
+                document.head.appendChild($style)
+              }
+            }
+          }, false )
+          window.parent.postMessage({ key: 'ready', data: '' }, '*')
+        }, [])
+        return <Comp />;
+      }
+      const domContainer = document.querySelector('#app');
+      ReactDOM.render(<App />, domContainer);
+    </script>
+  </body>
+</html>

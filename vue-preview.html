@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>react App</title>
+    <link
+      rel="stylesheet"
+      href="./lib/vant-index.css"
+    />
+    <script src="./lib/vue.js"></script>
+    <script src="./lib/babel.standalone.min.js"></script>
+    <script src="./lib/babel-plugin-transform-vue-jsx.min.js"></script>
+    <script src="./lib/vant.min.js"></script>
+    <script src="./lib/vant-touch-emulator.js"></script>
+    <script src="./lib/axios.min.js"></script>
+    <script src="./lib/dayjs.min.js"></script>
+    <script src="./lib/stylus.min.js"></script>
+    <style>
+      html::-webkit-scrollbar{
+        width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+    </div>
+    <script type="text/babel">
+      Vue.use(vant)
+      Babel.registerPlugin('transform-vue-jsx', window['babel-plugin-transform-vue-jsx'])
+      Babel.registerPlugin('transform-vue-jsx', window['babel-plugin-transform-vue-jsx'])
+      const app = new Vue({
+        el: '#app',
+        data: {
+          code: `{ nanme: 'comp', render () { return <div/> }}`
+        },
+        computed: {
+          component () {
+            let temp = {}
+            try {
+              const code = Babel.transform(`var obj = ${this.code}`, { presets: ['es2015'], plugins: ['transform-vue-jsx'] }).code
+              temp = new Function (`${code.replace('"use strict";\n', '')} return obj; `)()
+            } catch (e) {
+              temp = {
+                data () {
+                  return {
+                    msg: e
+                  }
+                },
+                render (h) {
+                  return h('div', {
+                    style: {
+                      color: 'red'
+                    }
+                  },
+                  JSON.stringify(e, null, 2))
+                }
+              }
+            }
+            return temp
+          }
+        },
+        mounted () {
+          console.log('mounted')
+          window.addEventListener('message', e =>{
+            const { data, key } = e.data
+            if (!key) return
+            if (key === 'reload') {
+              window.location.reload()
+            }
+            if (key === 'setCode') {
+              this.code = data
+            }
+            if (key === 'setStyle') {
+              if (data) {
+                const $style = document.createElement('style')
+                $style.innerText = stylus.render(data)
+                document.head.appendChild($style)
+              }
+            }
+          }, false )
+          window.parent.postMessage({ key: 'ready', data: '' }, '*')
+        },
+        render (h) {
+          return h(this.component)
+        }
+      })
+    </script>
+  </body>
+</html>
