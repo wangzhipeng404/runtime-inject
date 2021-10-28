@@ -50,6 +50,9 @@
       this.finished = false;
       this.onLoad();
     },
+    onRowClick () {
+      this.$xpe.emit('rowclick')
+    }
   },
   render () {
       return (
@@ -61,7 +64,13 @@
             loading-text="正在加载"
             on-load={this.onLoad}
           >
-            {this.list.map((item) => <van-cell key={item} title={item} />)}
+            {this.list.map((item) => (
+              <van-cell
+                key={item}
+                title={item}
+                on-click={this.onRowClick} 
+              />
+            ))}
           </van-list>
         </van-pull-refresh>
       )
@@ -252,15 +261,15 @@ var defaultReactCss = `// stylus
       window.addEventListener('message', e => {
         const { data, key } = e.data
         if (!key) return
-        if (key === 'ready') {
+        console.log('xpe', e.data)
+        if (key === 'ready' || key === 'mounted') {
           $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, '*');
           $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, '*');
         }
       }, false)
       document.getElementById('btn').addEventListener('click', () => {
-        $iFrame.contentWindow.postMessage({ key: 'reload' }, '*');
-        // $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, '*');
-        // $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, '*');
+        $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, '*');
+        $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, '*');
       })
       $vuebtn.addEventListener('click', function () {
         if (mode === 'VUE') return;
