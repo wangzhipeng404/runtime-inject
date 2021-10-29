@@ -19,6 +19,7 @@
     <script src="./lib/axios.min.js"></script>
     <script src="./lib/dayjs.min.js"></script>
     <script src="./lib/stylus.min.js"></script>
+    <script src="./lib/vconsole.min.js"></script>
     <style>
       html::-webkit-scrollbar{
         width: 0;
@@ -28,36 +29,110 @@
   </head>
   <body ontouchstart>
     <div id="app"></div>
+    <script>
+      window.xpe_callEvent = function (name, params) {
+        window.parent.postMessage({ key: name, data: params }, '*')
+      }
+      window.addEventListener('message', (e) => {
+        const { data, key } = e.data
+        if (!key) return
+        window.xpe_reciveData(e.data, key)
+      }, false)
+      for (var k in window['react-vant']) {
+        window['Van' + k] = window['react-vant'][k]
+      }
+    </script>
     <script type="text/babel">
       window.vant = window['react-vant']
+      window.Rv = window['react-vant']
+      const u = navigator.userAgent
+      const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
+      const xpe = {
+        events: {},
+        clean() {
+          this.events = {}
+        },
+        on(key, callback) {
+          if (!this.events[key]) {
+            this.events[key] = callback
+          } else {
+            throw new Error('key has been registered')
+          }
+        },
+        off(key) {
+          if (this.events[key]) {
+            this.events[key] = undefined
+          } else {
+            throw new Error('unregistered key')
+          }
+        },
+        run(key, data) {
+          if (this.events[key]) {
+            this.events[key](data)
+          } else {
+            throw new Error('key not find')
+          }
+        },
+        has(key) {
+          return !!this.events[key]
+        },
+        emit(name, params = null) {
+          if (!isAndroid) {
+            window.xpe_callEvent && window.xpe_callEvent(name, params, null)
+          } else {
+            if (params) {
+              params = JSON.stringify(params)
+            }
+            window.pageObject.page_xpe_callEvent(name, params, null)
+          }
+        },
+      }
+      window.xpe = xpe
       const App = (props) => {
+        const [styleStr, setStyleStr] = React.useState('')
         const [code, setCode] = React.useState(`return <div></div>;`)
-        const transformed = Babel.transform(`function Code () { ${code} }`, { presets: ['es2015', 'react'] }).code;
-        const Comp = new Function(
-          `${transformed.replace('"use strict";\n\n', '')} return Code()`
-        )
+        const style = React.useMemo(() => {
+          return stylus.render(styleStr)
+        }, [styleStr])
+        const Comp = React.useMemo(() => {
+          const transformed = Babel.transform(`function Code () { ${code} }`, { presets: ['es2015', 'react'] }).code;
+          return new Function(`${transformed.replace('"use strict";\n\n', '')} return Code()`)
+        }, [code])
         React.useEffect(() => {
-          console.log('react mounted')
-          window.addEventListener('message', e =>{
-            const { data, key } = e.data
-            if (!key) return
-            if (key === 'reload') {
-              window.location.reload()
+          xpe.clean()
+          window.xpe_reciveData = function(data, key){
+            if(typeof data == 'string'){
+              data = JSON.parse(data);
             }
-            if (key === 'setCode') {
-              setCode(data)
+            if (xpe.has(key)) {
+              xpe.run(key, data.data)
             }
-            if (key === 'setStyle') {
-              if (data) {
-                const $style = document.createElement('style')
-                $style.innerText = stylus.render(data)
-                document.head.appendChild($style)
-              }
+          }
+          xpe.on('setCode', (data) => {
+            setCode(data)
+          })
+          xpe.on('setStyle', data => {
+            setStyleStr(data)
+          })
+          xpe.on('openConsole', () => {
+            if (!window.vs) {
+              window.vs = new vconsole()
             }
-          }, false )
-          window.parent.postMessage({ key: 'ready', data: '' }, '*')
+          })
+          xpe.on('closeConsole', () => {
+            if (window.vs) {
+              window.vs.destroy()
+              window.vs = null
+            }
+          })
+          xpe.emit('mounted')
         }, [])
-        return <Comp />;
+        return (
+          <div>
+            <style>{style}</style>
+            <Comp />
+          </div>
+        );
       }
       const domContainer = document.querySelector('#app');
       ReactDOM.render(<App />, domContainer);
