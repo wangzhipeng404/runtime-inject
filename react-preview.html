@@ -30,14 +30,6 @@
   <body ontouchstart>
     <div id="app"></div>
     <script>
-      window.xpe_callEvent = function (name, params) {
-        window.parent.postMessage({ key: name, data: params }, '*')
-      }
-      window.addEventListener('message', (e) => {
-        const { data, key } = e.data
-        if (!key) return
-        window.xpe_reciveData(e.data, key)
-      }, false)
       for (var k in window['react-vant']) {
         window['Van' + k] = window['react-vant'][k]
       }

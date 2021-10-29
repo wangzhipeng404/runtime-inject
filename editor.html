@@ -18,6 +18,7 @@
     <script src="./lib/vue.js"></script>
     <script src="./lib/babel.standalone.min.js"></script>
     <script src="./lib/babel-plugin-transform-vue-jsx.min.js"></script>
+    <script src="./utils/iframe-inject.js"></script>
     <script>
     var defaultVueCode = `{
   data () {
@@ -221,7 +222,7 @@ var defaultReactCss = `// stylus
         </div>
         <div class="phone-view">
           <iframe 
-            src="./vue-preview.html"
+            src="./vue/dist/vue/page.html"
             frameborder="0"
             style="height: 640px;width: 100%;"
             id="preview-iframe"
@@ -238,6 +239,7 @@ var defaultReactCss = `// stylus
       const $vuebtn = document.getElementById('vue-btn')
       const $reactbtn = document.getElementById('react-btn')
       const $iFrame = document.getElementById('preview-iframe')
+      window.injectIframe($iFrame.contentWindow)
       const editorcss = ace.edit('editor-css');
       const editorjs = ace.edit('editor-js');
       editorcss.setOptions({
@@ -261,19 +263,19 @@ var defaultReactCss = `// stylus
       window.addEventListener('message', e => {
         const { data, key } = e.data
         if (!key) return
-        console.log('xpe', e.data)
         if (key === 'ready' || key === 'mounted') {
-          $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, '*');
-          $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, '*');
+          $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, location.origin);
+          $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, location.origin);
         }
       }, false)
       document.getElementById('btn').addEventListener('click', () => {
         console.log('set')
-        $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, '*');
-        $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, '*');
+        $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, location.origin);
+        $iFrame.contentWindow.postMessage({ key: 'setCode', data: editorjs.getValue() }, location.origin);
       })
       $vuebtn.addEventListener('click', function () {
         if (mode === 'VUE') return;
+        window.injectIframe($iFrame.contentWindow)
         mode = 'VUE'
         $vuebtn.classList.replace('van-button--default', 'van-button--primary')
         $reactbtn.classList.replace('van-button--primary', 'van-button--default')
@@ -281,10 +283,11 @@ var defaultReactCss = `// stylus
         defaultReactCode = editorjs.getValue()
         editorcss.setValue(defaultVueCss)
         editorjs.setValue(defaultVueCode)
-        $iFrame.src = './vue-preview.html'
+        $iFrame.src = './vue/dist/vue/page.html'
       })
       $reactbtn.addEventListener('click', function () {
         if (mode === 'REACT') return;
+        window.injectIframe($iFrame.contentWindow)
         mode = 'REACT'
         $reactbtn.classList.replace('van-button--default', 'van-button--primary')
         $vuebtn.classList.replace('van-button--primary', 'van-button--default')

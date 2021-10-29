@@ -13,7 +13,7 @@
     <script src="./lib/vant-touch-emulator.js"></script>
     <script src="./lib/axios.min.js"></script>
     <script src="./lib/vue-axios.common.min.js"></script>
-    <script src="./lib/dayjs.min.js"></script>
+    <!-- <script src="./lib/dayjs.min.js"></script> -->
     <script src="./lib/stylus.min.js"></script>
     <script src="./lib/vconsole.min.js"></script>
     <style>
@@ -30,7 +30,7 @@
         window['babel-plugin-transform-vue-jsx']
       )
       window.xpe_callEvent = function (name, params) {
-        window.parent.postMessage({ key: name, data: params }, '*')
+        window.parent.postMessage({ key: name, data: params }, location.origin)
       }
       window.addEventListener('message', (e) => {
         const { data, key } = e.data
@@ -39,11 +39,38 @@
       }, false)
     </script>
     <script type="text/babel">
+      const __installed = {}
+      const __require = function (deps) {
+        const promises = deps.map(dep => {
+          if (__installed[dep]) {
+            return new Promise((resolve, reject) => {
+              resolve()
+            })
+          }
+          return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = dep;
+            const onScriptComplete = () => {
+              __installed[dep] = true
+              resolve()
+            }
+            script.onload = onScriptComplete
+            script.onerror = () => {
+              reject(`${dep} 加载失败`)
+            }
+            document.head.appendChild(script)
+          })
+        })
+        return Promise.all(promises)
+      }
+      Vue.prototype.$require = __require
+    </script>
+    <script type="text/babel">
       Vue.use(vant)
       Vue.use(VueAxios, axios)
       Vue.config.productionTip = false
 
-      Vue.prototype.$dayjs = dayjs
+      // Vue.prototype.$dayjs = dayjs
       const u = navigator.userAgent
       const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1
       Vue.prototype.$xpe = {

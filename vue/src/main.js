@@ -5,58 +5,20 @@ import * as Babel from '@babel/standalone'
 import vjsx from 'babel-plugin-transform-vue-jsx'
 import vconsole from 'vconsole'
 import axios from 'axios'
-
 import VueAxios from 'vue-axios'
 import dayjs from 'dayjs'
+import myRequire from './utils/require'
+import xpe from './utils/xpe'
 
 Babel.registerPlugin('transform-vue-jsx', vjsx)
 Vue.use(Vant);
 Vue.use(VueAxios, axios)
-Vue.config.productionTip = false
+Vue.use(myRequire)
+Vue.use(xpe)
 
+Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs
-const u = navigator.userAgent
-const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
-Vue.prototype.$xpe = {
-  events: {},
-  clean () {
-    this.events = {}
-  },
-  on (key, callback) {
-    if (!this.events[key]) {
-      this.events[key] = callback
-    } else {
-      throw new Error('key has been registered')
-    }
-  },
-  off (key) {
-    if (this.events[key]) {
-      this.events[key] = undefined
-    } else {
-      throw new Error('unregistered key')
-    }
-  },
-  run (key, data) {
-    if (this.events[key]) {
-      this.events[key](data)
-    } else {
-      throw new Error('key not find')
-    }
-  },
-  has (key) {
-    return !!this.events[key]
-  },
-  emit (name, params = null) {
-    if (!isAndroid) {
-      window.xpe_callEvent && window.xpe_callEvent(name, params, null);
-    } else {
-      if (params) {
-        params = JSON.stringify(params);
-      }
-      window.pageObject.page_xpe_callEvent(name,params,null);
-    }
-  }
-}
+
 
 new Vue({
   data: {
