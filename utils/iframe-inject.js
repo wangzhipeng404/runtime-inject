@@ -4,7 +4,7 @@ function injectIframe (content) {
   css.innerHTML = 'body::-webkit-scrollbar { width: 0 }';
   content.document.getElementsByTagName('head')[0].appendChild(css);
   var script = content.document.createElement('script')
-  script.src = '../../../../lib/vant-touch-emulator.js'
+  script.src = '../../../lib/vant-touch-emulator.js'
   content.document.getElementsByTagName('head')[0].appendChild(script)
   content.xpe_callEvent = function (name, params) {
     content.parent.postMessage({ key: name, data: params }, location.origin)
