@@ -157,12 +157,12 @@ var defaultReactCss = `// stylus
         height: 50px;
       }
       .left {
-        width: 670px;
+        width: 50vw;
       }
       .right {
         position: relative;
         box-sizing: border-box;
-        width: calc(100% - 670px);
+        width: 50vw;
         height: calc(100% - 70px);
         display: flex;
         justify-content: center;
@@ -174,7 +174,7 @@ var defaultReactCss = `// stylus
       }
       .phone-view {
         width: 375px;
-        height: 660px;
+        height: 70vh;
         border-radius: 10px;
         background-color: #fff;
         border-radius: 10px;
@@ -186,9 +186,18 @@ var defaultReactCss = `// stylus
       #preview-iframe::-webkit-scrollbar{
         width: 0;
       }
+      #preview-iframe html::-webkit-scrollbar{
+        width: 0;
+      }
+      #preview-iframe body::-webkit-scrollbar{
+        width: 0;
+      }
       .ace_editor {
         width: 100%;
         height: 100%;
+      }
+      .ace_scrollbar-v {
+        width: 0 !important
       }
       .btn {
         position: absolute;
@@ -224,7 +233,7 @@ var defaultReactCss = `// stylus
           <iframe 
             src="./vue/dist/vue/page.html"
             frameborder="0"
-            style="height: 640px;width: 100%;"
+            style="height: 70vh;width: 100%;"
             id="preview-iframe"
             sandbox="allow-same-origin allow-forms allow-scripts"
           >
@@ -239,7 +248,10 @@ var defaultReactCss = `// stylus
       const $vuebtn = document.getElementById('vue-btn')
       const $reactbtn = document.getElementById('react-btn')
       const $iFrame = document.getElementById('preview-iframe')
-      window.injectIframe($iFrame.contentWindow)
+      $iFrame.onload = function() {
+        injectIframe($iFrame.contentWindow)
+        $iFrame.contentWindow.xpe_callEvent('mounted', {})
+      }
       const editorcss = ace.edit('editor-css');
       const editorjs = ace.edit('editor-js');
       editorcss.setOptions({
@@ -275,7 +287,6 @@ var defaultReactCss = `// stylus
       })
       $vuebtn.addEventListener('click', function () {
         if (mode === 'VUE') return;
-        window.injectIframe($iFrame.contentWindow)
         mode = 'VUE'
         $vuebtn.classList.replace('van-button--default', 'van-button--primary')
         $reactbtn.classList.replace('van-button--primary', 'van-button--default')
@@ -287,7 +298,6 @@ var defaultReactCss = `// stylus
       })
       $reactbtn.addEventListener('click', function () {
         if (mode === 'REACT') return;
-        window.injectIframe($iFrame.contentWindow)
         mode = 'REACT'
         $reactbtn.classList.replace('van-button--default', 'van-button--primary')
         $vuebtn.classList.replace('van-button--primary', 'van-button--default')

@@ -93,6 +93,7 @@
         React.useEffect(() => {
           xpe.clean()
           window.xpe_reciveData = function(data, key){
+            console.log(data)
             if(typeof data == 'string'){
               data = JSON.parse(data);
             }
