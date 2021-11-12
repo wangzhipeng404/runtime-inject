@@ -2,15 +2,15 @@ import Vue from 'vue'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import * as Babel from '@babel/standalone'
-import vjsx from 'babel-plugin-transform-vue-jsx'
+import vuejsx from '@vue/babel-preset-jsx'
+import mergeProps from '@vue/babel-helper-vue-jsx-merge-props'
 import vconsole from 'vconsole'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import dayjs from 'dayjs'
 import myRequire from './utils/require'
 import xpe from './utils/xpe'
-
-Babel.registerPlugin('transform-vue-jsx', vjsx)
+Babel.registerPreset('vue-jsx', vuejsx)
 Vue.use(Vant);
 Vue.use(VueAxios, axios)
 Vue.use(myRequire)
@@ -24,6 +24,7 @@ new Vue({
   data: {
     styleStr: '',
     code: '',
+    mode: 'prod',
   },
   computed: {
     style () {
@@ -39,10 +40,13 @@ new Vue({
       }
       try {
         const code = Babel.transform(`var obj = ${this.code}`, { 
-          presets: ['es2015'],
-          plugins: ['transform-vue-jsx'] 
+          presets: ['es2015', 'vue-jsx'],
         }).code
-        temp = new Function (`${code.replace('"use strict";\n', '')} return obj; `)()
+        if (this.mode === 'dev') {
+          console.log(code)
+        }
+        const fn = new Function ('mergeProps', `${code.replace('"use strict";\n', '').replace('require("@vue/babel-helper-vue-jsx-merge-props")', 'mergeProps')}\nreturn obj;`)
+        temp = fn(mergeProps)
       } catch (e) {
         temp = {
           data () {
@@ -74,6 +78,9 @@ new Vue({
         self.$xpe.run(key, data.data)
       }
     }
+    this.$xpe.on('setMode', (data) => {
+      this.mode = data
+    })
     this.$xpe.on('setCode', (data) => {
       this.code = data
     })

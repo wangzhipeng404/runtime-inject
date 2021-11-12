@@ -8,5 +8,5 @@ module.exports = {
   publicPath: './',
   indexPath:'page.html',
   outputDir:'dist/vue',
-  productionSourceMap:false,
+  productionSourceMap:true,
 }

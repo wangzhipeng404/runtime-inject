@@ -4,8 +4,12 @@ xpe.install = function (Vue) {
   const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
   Vue.prototype.$xpe = {
     events: {},
-    clean () {
-      this.events = {}
+    clean (keys = []) {
+      keys.forEach(key => {
+        if (this.events[key]) {
+          delete this.events[key]
+        }
+      })
     },
     on (key, callback) {
       if (!this.events[key]) {
@@ -19,16 +23,16 @@ xpe.install = function (Vue) {
       if (this.events[key]) {
         this.events[key] = undefined
       } else {
-        console.log('unregistered key')
-        throw new Error('unregistered key')
+        console.warn('unregistered key')
+        // throw new Error('unregistered key')
       }
     },
     run (key, data) {
       if (this.events[key]) {
         this.events[key](data)
       } else {
-        console.log('key not find')
-        throw new Error('key not find')
+        console.warn('key not find')
+        // throw new Error('key not find')
       }
     },
     has (key) {

@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "@babel/standalone": "^7.15.8",
+    "@vue/babel-sugar-v-model": "^1.2.3",
     "axios": "^0.24.0",
+    "babel-plugin-jsx-v-model": "^2.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-plugin-transform-vue-jsx": "^4.0.1",
     "core-js": "^3.6.5",
     "dayjs": "^1.10.7",
     "vant": "^2.12.30",
