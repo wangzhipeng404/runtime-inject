@@ -2,11 +2,12 @@ const xpe = {}
 xpe.install = function (Vue) {
   const u = navigator.userAgent
   const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+  const protectKeys = ['setMode', 'setCode', 'setStyle', 'openConsole', 'closeConsole']
   Vue.prototype.$xpe = {
     events: {},
-    clean (keys = []) {
-      keys.forEach(key => {
-        if (this.events[key]) {
+    clean () {
+      Object.keys(this.events).forEach(key => {
+        if (!protectKeys.includes(key)) {
           delete this.events[key]
         }
       })

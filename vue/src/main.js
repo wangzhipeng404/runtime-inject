@@ -82,6 +82,7 @@ new Vue({
       this.mode = data
     })
     this.$xpe.on('setCode', (data) => {
+      this.$xpe.clean()
       this.code = data
     })
     this.$xpe.on('setStyle', data => {
