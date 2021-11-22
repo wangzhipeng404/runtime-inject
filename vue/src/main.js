@@ -101,7 +101,7 @@ new Vue({
     this.$xpe.emit('created')
   },
   mounted () {
-    this.$xpe.emit('mounted')
+    this.$xpe.emit('ready')
   },
   render () {
     const Component = this.component

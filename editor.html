@@ -249,7 +249,7 @@ var defaultReactCss = `// stylus
       const $iFrame = document.getElementById('preview-iframe')
       $iFrame.onload = function() {
         injectIframe($iFrame.contentWindow)
-        $iFrame.contentWindow.xpe_callEvent('mounted', {})
+        $iFrame.contentWindow.xpe_callEvent('ready', {})
       }
       const editorcss = ace.edit('editor-css');
       const editorjs = ace.edit('editor-js');
@@ -273,6 +273,7 @@ var defaultReactCss = `// stylus
       editorjs.setValue(defaultVueCode)
       window.addEventListener('message', e => {
         const { data, key } = e.data
+        console.log(key, data)
         if (!key) return
         if (key === 'ready' || key === 'mounted') {
           $iFrame.contentWindow.postMessage({ key: 'setStyle', data: editorcss.getValue() }, location.origin);
