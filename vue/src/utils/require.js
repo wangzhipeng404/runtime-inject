@@ -2,6 +2,9 @@ const myRequire = {}
 myRequire.install = function (Vue) {
   const __installed = {}
   Vue.prototype.$require = function (deps) {
+    if (typeof deps === 'string') {
+      deps = [deps]
+    }
     const promises = deps.map(dep => {
       if (__installed[dep]) {
         return new Promise((resolve) => {

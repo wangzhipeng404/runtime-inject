@@ -8,9 +8,11 @@ import vconsole from 'vconsole'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import dayjs from 'dayjs'
+import * as echarts from 'echarts';
 import myRequire from './utils/require'
 import xpe from './utils/xpe'
 Babel.registerPreset('vue-jsx', vuejsx)
+Vue.prototype.$echarts = echarts
 Vue.use(Vant);
 Vue.use(VueAxios, axios)
 Vue.use(myRequire)
