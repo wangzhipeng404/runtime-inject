@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vue editor</title>
+    <script src="./utils/iframe-inject.js"></script>
+    <style>
+      div {
+        box-sizing: border-box;
+      }
+      .container {
+        display: flex;
+        height: 98vh;
+        width: 100vw;
+        flex-wrap: wrap;
+      }
+      .phone-view {
+        width: 375px;
+        height: 70vh;
+        border-radius: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid #eee;
+      }
+      #preview-iframe {
+        border-radius: 10px;
+      }
+      #preview-iframe::-webkit-scrollbar{
+        width: 0;
+      }
+      #preview-iframe html::-webkit-scrollbar{
+        width: 0;
+      }
+      #preview-iframe body::-webkit-scrollbar{
+        width: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="phone-view">
+          <iframe 
+            src="./vue/dist/vue/page.html"
+            frameborder="0"
+            style="height: 70vh;width: 100%;"
+            id="preview-iframe"
+            sandbox="allow-same-origin allow-forms allow-scripts"
+          >
+          </iframe>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const $iFrame = document.getElementById('preview-iframe')
+      $iFrame.onload = function() {
+        injectIframe($iFrame.contentWindow)
+        $iFrame.contentWindow.xpe_callEvent('ready', {})
+      }
+      window.addEventListener('message', e => {
+        const { data, key } = e.data
+        console.log(key, data)
+        if (!key) return
+        if (key === 'ready' || key === 'mounted') {
+          var socket = io();
+          socket.emit('ready')
+          socket.on('setCode', (msg) => {
+            var code = /<script>(.*)<\/script>/igs.exec(msg)
+            var style = /<style.*>(.*)<\/style>/igs.exec(msg)
+            $iFrame.contentWindow.postMessage({ key: 'setStyle', data: style && style[1] }, location.origin);
+            $iFrame.contentWindow.postMessage({ key: 'setCode', data: code && code[1].replace('export default', '') }, location.origin);
+          })
+        }
+      }, false)
+    </script>
+  </body>
+</html>
