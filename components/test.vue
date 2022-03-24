@@ -5,9 +5,19 @@ export default {
       show: true
     }
   },
-  render () {
+  created () {
+    this.$require(['/lib/test.css', '/lib/hello.umd.js']).then(() => {
+      console.log(hello)
+      this.$forceUpdate()
+    })
+  },
+  render (h) {
+    const HelloWorld = window.hello
     return (
-      <div>111</div>
+      <div>
+        <div class="color-blue">2342452</div>
+        <HelloWorld />
+      </div>
     )
   }
 }

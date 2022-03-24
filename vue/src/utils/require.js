@@ -5,7 +5,26 @@ myRequire.install = function (Vue) {
     if (typeof deps === 'string') {
       deps = [deps]
     }
-    const promises = deps.map(dep => {
+    const css = []
+    const js = []
+    deps.forEach(path => {
+      const arr = path.split('.')
+      const type = arr[arr.length - 1]
+      if (type === 'css') {
+        css.push(path)
+      } else {
+        js.push(path)
+      }
+    });
+    const head = document.getElementsByTagName('head')[0];
+    css.forEach(path => {
+      const link = document.createElement('link');
+      link.type='text/css';
+      link.rel = 'stylesheet';
+      link.href = path;
+      head.appendChild(link);
+    })
+    const promises = js.map(dep => {
       if (__installed[dep]) {
         return new Promise((resolve) => {
           resolve()

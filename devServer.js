@@ -14,17 +14,21 @@ app.get('/', (req, res) => {
 });
 let socketUser = null
 let fileName = __dirname + '/components/test.vue'
-fs.watchFile(fileName, (cur, prev) => {
+function sendStream () {
   if (socketUser) {
     fs.readFile(fileName, 'utf-8' ,(err, data) => {
       if (err) throw err
       socketUser.emit('setCode', data);
     } )
   }
+}
+fs.watchFile(fileName, (cur, prev) => {
+  sendStream()
 })
 io.on('connection', (socket) => {
   socket.on('ready', () => {
     socketUser = socket
+    sendStream()
   })
 });
 
