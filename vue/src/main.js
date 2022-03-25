@@ -20,7 +20,7 @@ Vue.use(xpe)
 
 Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs
-
+Vue.prototype.$cache = new Map()
 
 new Vue({
   data: {

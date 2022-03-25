@@ -5,11 +5,17 @@ export default {
       show: true
     }
   },
+  beforeCreate () {
+    this.$cache.set('test', { test :'test cache'})
+  },
   created () {
-    this.$require(['/lib/test.css', '/lib/hello.umd.js']).then(() => {
+    this.$require(['/lib/test.css', '../hello/hello.umd.js']).then(() => {
       console.log(hello)
       this.$forceUpdate()
     })
+  },
+  mounted () {
+    this.axios.defaults.headers.common['token'] = '1234567'
   },
   render (h) {
     const HelloWorld = window.hello
