@@ -17,6 +17,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="less">
+.blue {
+  color: bule;
+}
 </style>

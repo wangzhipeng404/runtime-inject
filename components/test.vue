@@ -6,7 +6,7 @@ export default {
     }
   },
   beforeCreate () {
-    this.$cache.set('test', { test :'test cache'})
+    this.$cache.set('test', () => { console.log (1111) })
   },
   created () {
     this.$require(['/lib/test.css', '../hello/hello.umd.js']).then(() => {
