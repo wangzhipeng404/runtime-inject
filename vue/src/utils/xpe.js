@@ -49,14 +49,10 @@ xpe.install = function (Vue) {
       if (!isAndroid) {
         window[`xpe_${name}`] && window[`xpe_${name}`](...args);
       } else {
-        let fn = null
         if (window.SmartCommonWebViewExtension && window.SmartCommonWebViewExtension[`page_xpe_${name}`]) {
-          fn = window.SmartCommonWebViewExtension[`page_xpe_${name}`]
+          window.SmartCommonWebViewExtension[`page_xpe_${name}`](...args)
         } else if (window.pageObject && window.pageObject[`page_xpe_${name}`]) {
-          fn = window.pageObject[`page_xpe_${name}`]
-        }
-        if (fn) {
-          fn(...args);
+          window.pageObject[`page_xpe_${name}`](...args)
         }
       }
     }
