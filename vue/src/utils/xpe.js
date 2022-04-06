@@ -40,13 +40,16 @@ xpe.install = function (Vue) {
       return !!this.events[key]
     },
     emit (name, params = null) {
+      if (isAndroid && params) {
+        params = JSON.stringify(params);
+      }
+      this.bridge('callEvent', name, params, null)
+    },
+    bridge (name, ...args) {
       if (!isAndroid) {
-        window.xpe_callEvent && window.xpe_callEvent(name, params, null);
+        window[`xpe_${name}`] && window[`xpe_${name}`](...args);
       } else {
-        if (params) {
-          params = JSON.stringify(params);
-        }
-        window.pageObject.page_xpe_callEvent(name,params,null);
+        window.pageObject[`page_xpe_${name}`](...args);
       }
     }
   }

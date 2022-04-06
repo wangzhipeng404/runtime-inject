@@ -6,7 +6,7 @@ module.exports = {
     }
   },
   publicPath: './',
-  indexPath:'page.html',
-  outputDir:'dist/vue',
-  productionSourceMap:true,
+  indexPath: 'page.html',
+  outputDir: 'dist/vue',
+  productionSourceMap: false,
 }
