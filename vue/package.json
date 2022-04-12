@@ -6,7 +6,12 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint",
-    "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue"
+    "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue",
+    "lib:swiper": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xswiper --name xswiper.v1.0.0  ./packages/swiper/swiper.vue",
+    "lib:messageNotice": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xmessageNotice --name xmessageNotice.v1.0.0  ./packages/messageNotice/messageNotice.vue",
+    "lib:navigationIcon": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xnavigationIcon --name xnavigationIcon.v1.0.0  ./packages/navigationIcon/navigationIcon.vue",
+    "lib:targetProgress": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xtargetProgress --name xtargetProgress.v1.0.0  ./packages/targetProgress/targetProgress.vue",
+    "lib:userDefined": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xuserDefined --name xuserDefined.v1.0.0  ./packages/userDefined/userDefined.vue"
   },
   "dependencies": {
     "@babel/standalone": "^7.15.8",
@@ -18,6 +23,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.7",
     "echarts": "^5.2.2",
+    "less": "^4.1.2",
     "vant": "^2.12.30",
     "vconsole": "^3.9.4",
     "vue": "^2.6.11",
