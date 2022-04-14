@@ -6,7 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint",
-    "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue"
+    "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue",
+    "lib:aiswiper": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/ai-swiper --name AISwiper ./packages/ai-swiper/Swiper.vue",
+    "lib:smscode": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/sms-code --name SmsCode ./packages/sms-code/index.vue",
+    "lib:displayReport": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-report --name DisplayReport ./packages/display-report/index.vue",
+    "lib:displayStatistics": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-statistics --name DisplayStatistics ./packages/display-statistics/index.vue"
   },
   "dependencies": {
     "@babel/standalone": "^7.15.8",
@@ -21,7 +25,8 @@
     "vant": "^2.12.30",
     "vconsole": "^3.9.4",
     "vue": "^2.6.11",
-    "vue-axios": "^3.3.7"
+    "vue-axios": "^3.3.7",
+    "vue-canvas-poster": "^1.2.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

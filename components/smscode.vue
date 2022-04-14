@@ -3,6 +3,18 @@ export default {
   data () {
     return {
       show: true,
+      query: {
+        appid: "wx81ede3953d348969",
+        storeInfo: {
+          storeid: "1496306543371620462",
+          storename: "智慧"
+        },
+        user: {
+          positionID: "1478328891004293120",
+          userinfoName: "颜1",
+          positionName: "业务员",
+        }
+      }
     }
   },
   beforeCreate () {
@@ -12,21 +24,19 @@ export default {
   },
   created () {
     this.$require([
-      '../h5-components/display-statistics/DisplayStatistics.css',
-      '../h5-components/display-statistics/DisplayStatistics.umd.min.js',
+      '../h5-components/sms-code/SmsCode.css',
+      '../h5-components/sms-code/SmsCode.umd.min.js',
     ]).then(() => {
+      console.log(SmsCode)
       this.$forceUpdate()
-      setTimeout(() => {
-        this.$xpe.run('loadReportData', [{ title: '1232', value: '80' }])
-      }, 3000)
     })
   },
   mounted () {
   },
   render (h) {
-    const DisplayStatistics = window.DisplayStatistics
+    const SmsCode = window.SmsCode
     return (
-      <DisplayStatistics />
+      <SmsCode query={this.query} />
     )
   }
 }
