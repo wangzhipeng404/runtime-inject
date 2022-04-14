@@ -2,36 +2,32 @@
 export default {
   data () {
     return {
-      show: true,
+      loaded: false
     }
   },
-  beforeCreate () {
-    this.$cache.set('test', () => { console.log (1111) })
-    this.axios.defaults.baseURL = 'http://101.200.205.231:7000'
-    this.axios.defaults.headers['token'] = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDk3NzAxNTgsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTEwMDkxODQxNzk2NzA2MzA0IiwiYWNjb3VudENvZGUiOiIxNTEwMDkxODQxNDc3OTM5MjAwIiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjozLCJ0b2tlbklkIjoiMmQwMWY5OTgtODA4Yy00ZWU1LWIwODgtNjMxNzUyMWYwNTc5Iiwib3JnQ29kZSI6IjE0NzgzMjg3OTUyMTg5NzI2NzIiLCJ1c2VySW5mb0lkIjoiMTUwNTgxMzk0MjY1MDQxMTk1OSIsInVzZXJJbmZvTmFtZSI6IuminDEiLCJwb3NpdGlvbkNvZGUiOiIxNDc4MzI4ODkxMDA0MjkzMTIwIiwicG9zaXRpb25OYW1lIjoi5Lia5Yqh5ZGYIiwibWVtYmVyQ29kZSI6IjE1MTAwOTE4NDA0OTIyNzc3NjAiLCJyZWZQb3NpdGlvbkNvZGUiOiI4ODgwMDAwMDAwMDAwMDAwMDIiLCJjYXRlZ29yeUNvZGUiOiJzZmEtc2FsZXNtYW4iLCJvcmdTdHJ1Y3RUeXBlSWQiOiIxIiwidXNlck5hbWUiOiIxMTIyMzMiLCJ1c2VyTmFtZTEiOiIxMzAwMDAwMDEyMyIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjoiMTEyMjMzIiwidGVuYW50TmFtZSI6IuaZuuaFpzEwMFY2LjAtYmFzZeS6p-WTgeenn-aItyIsImFwcENvZGUiOiJzYWxlcyIsImFwcENvZGVzIjpbImRpc3RyaWJ1dGlvbiIsInByb21vdGlvbiIsInNhbGVzIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMS4xNDc4MzI4Nzk1MjE4OTcyNjcyLiIsImlzbGVhZm9yZyI6ImZhbHNlIiwibWV0YW1vZGVsdHlwZSI6MSwiaXNTbXNMb2dpbiI6ZmFsc2V9fQ.DWrY-dO6YjdlrWkzh2OEy0Fgj60FwTs3eOm0pHkOjwE"
-  },
   created () {
-    this.$require([
-      '../h5-components/display-statistics/DisplayStatistics.css',
-      '../h5-components/display-statistics/DisplayStatistics.umd.min.js',
+      this.$require([
+      '../h5-components/ai-swiper/AISwiper.css',
+      '../h5-components/ai-swiper/AISwiper.umd.min.js',
     ]).then(() => {
-      this.$forceUpdate()
-      setTimeout(() => {
-        this.$xpe.run('loadReportData', [{ title: '1232', value: '80' }])
-      }, 3000)
+      this.loaded = true
     })
   },
-  mounted () {
-  },
-  render (h) {
-    const DisplayStatistics = window.DisplayStatistics
+  render () {
+    if (!this.loaded) {
+        return <div />
+    }
+    const AISwiper = window.AISwiper
     return (
-      <DisplayStatistics />
+      <div class="wrap">
+        <AISwiper mode="preview" />
+      </div>
     )
-  }
+  },
 }
 </script>
 <style lang="stylus">
-.title
-  color blue
+.wrap
+  width 100vw
+  height 100vh
 </style>
