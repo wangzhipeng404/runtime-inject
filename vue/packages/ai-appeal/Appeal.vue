@@ -109,7 +109,7 @@
           }else{
             this.init();
           }
-        },err=>{
+        },() =>{
           this.init();
         })
       }else{
@@ -197,23 +197,23 @@
           return item.appealLayer!==''||item.appealCount!=='';
         })
         if(list.length==0){
-          return Toast('请先填写要申诉的产品')
+          return this.$toast('请先填写要申诉的产品')
         }
         for(let i=0;i<list.length;i++){
           const item = list[i];
           if(item.layer=='-' && (item.appealLayer==''||item.appealCount=='')){
-            return Toast('添加的产品申诉需要填写申诉层数及排面数');
+            return this.$toast('添加的产品申诉需要填写申诉层数及排面数');
           }
         }
         for(let i=0;i<list.length;i++){
           const item = list[i];
           if(obj[item.skuCode+item.appealLayer]&&item.appealLayer){
-            return Toast('同一个产品不能申诉同一层');
+            return this.$toast('同一个产品不能申诉同一层');
           }else{
             obj[item.skuCode+item.appealLayer] = true;
           }
         }
-        Dialog.confirm({
+        this.$dialog.confirm({
           title: '提示',
           message: '每张图片只能申诉一次，确认申诉吗？'
         }).then(() => {
@@ -252,22 +252,22 @@
               "type": this.type,
               "storeid":this.query.storeId,
             }
-          }).then(res => res.data.resp_data).then(res=>{
+          }).then(res => res.data.resp_data).then(()=>{
             this.isLoading = false;
-            Toast('申诉成功');
+            this.$toast('申诉成功');
             setTimeout(()=>{
               this.$xpe.emit('back');
             },1500)
           },err=>{
             this.isLoading = false;
-            Toast(err.error_code ||'申诉失败');
+            this.$toast(err.error_code ||'申诉失败');
           })
         }).catch(() => {
         });
       },
-      showImg(data){
+      showImg(){
         let url = this.imgUrl;
-        ImagePreview([url]);
+        this.$imagePreview([url]);
       },
       addProduct(){
         this.$refs.product.open();
