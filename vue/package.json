@@ -11,6 +11,7 @@
     "lib:smscode": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/sms-code --name SmsCode ./packages/sms-code/index.vue",
     "lib:displayReport": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-report --name DisplayReport ./packages/display-report/index.vue",
     "lib:displayStatistics": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-statistics --name DisplayStatistics ./packages/display-statistics/index.vue",
+    "lib:aiappeal": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/ai-appeal --name AIAppeal ./packages/ai-appeal/Appeal.vue",
     "lib:swiper": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xswiper --name xswiper.v1.0.0  ./packages/swiper/swiper.vue",
     "lib:messageNotice": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xmessageNotice --name xmessageNotice.v1.0.0  ./packages/messageNotice/messageNotice.vue",
     "lib:navigationIcon": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xnavigationIcon --name xnavigationIcon.v1.0.0  ./packages/navigationIcon/navigationIcon.vue",
