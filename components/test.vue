@@ -2,32 +2,23 @@
 export default {
   data () {
     return {
-      loaded: false
+      show: true
     }
   },
   created () {
-      this.$require([
-      '../h5-components/ai-swiper/AISwiper.css',
-      '../h5-components/ai-swiper/AISwiper.umd.min.js',
-    ]).then(() => {
-      this.loaded = true
+    this.$require(['/lib/hello.umd.js']).then(() => {
+      console.log(hello)
     })
   },
-  render () {
-    if (!this.loaded) {
-        return <div />
-    }
-    const AISwiper = window.AISwiper
+  render (h) {
+    const HelloWorld = window.hello
     return (
-      <div class="wrap">
-        <AISwiper mode="preview" />
-      </div>
+      <HelloWorld />
     )
-  },
+  }
 }
 </script>
 <style lang="stylus">
-.wrap
-  width 100vw
-  height 100vh
+.title
+  color blue
 </style>

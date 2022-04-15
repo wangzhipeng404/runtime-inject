@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vant from 'vant';
+import Vant, { ImagePreview } from 'vant';
 import 'vant/lib/index.css';
 import * as Babel from '@babel/standalone'
 import vuejsx from '@vue/babel-preset-jsx'
@@ -18,6 +18,7 @@ Vue.use(VueAxios, axios)
 Vue.use(myRequire)
 Vue.use(xpe)
 
+Vue.prototype.$imagePreview = ImagePreview
 Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs
 Vue.prototype.$cache = new Map()
