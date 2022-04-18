@@ -74,7 +74,7 @@ new Vue({
     this.$xpe.clean()
     const self = this
     window.xpe_reciveData = function(data, key){
-      if(typeof data == 'string'){
+      if(data && typeof data == 'string'){
         data = JSON.parse(data);
       }
       if (self.$xpe.has(key)) {
