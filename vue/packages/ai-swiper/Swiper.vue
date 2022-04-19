@@ -267,7 +267,7 @@ export default {
               }
             }
           }
-          const url = canvas.toDataURL('image/jpeg')
+          const url = canvas.toDataURL('image/jpg')
           resovle(url)
         }
       })
