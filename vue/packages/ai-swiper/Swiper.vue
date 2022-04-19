@@ -197,8 +197,9 @@ export default {
       this.$xpe.emit('onChange', { index: tab })
     },
     saveImg() {
-      console.log(window.xpe_saveImage)
-      this.$xpe.bridge('saveImage', this.canvasUrl)
+      console.log('saveImage')
+      let reg = /data.+?;base64,/;
+      this.$xpe.bridge('saveImage', this.isAndroid ? this.canvasUrl : this.canvasUrl.replace(reg,''))
     },
     draw(imgData) {
       return new Promise((resovle) => {
@@ -267,7 +268,7 @@ export default {
               }
             }
           }
-          const url = canvas.toDataURL('image/jpg')
+          const url = canvas.toDataURL('image/jpeg')
           resovle(url)
         }
       })
