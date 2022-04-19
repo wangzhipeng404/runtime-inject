@@ -73,8 +73,8 @@ export default {
 .userDefined {
   background-color: #fff;
   border-radius: 10px;
-  // margin-bottom: 52px;
   padding: 12px;
+  margin-bottom: 12px;
   .top {
     display: flex;
     justify-content: space-between;
@@ -97,9 +97,6 @@ export default {
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
-      // display: -webkit-box;
-      // overflow-x: auto;
-      // -webkit-overflow-scrolling: touch;
       & > div {
         display: inline-block;
         flex: 0 0 33.333%;
@@ -107,9 +104,6 @@ export default {
       }
     }
     .content {
-      // display: -webkit-box;
-      // overflow-x: auto;
-      // -webkit-overflow-scrolling: touch;
       & > div {
         display: flex;
         justify-content: space-between;
@@ -120,10 +114,7 @@ export default {
         margin-bottom: 8px;
         & > div {
           flex: 0 0 33.333%;
-          // width: 120px;
-          // display: inline-block;
           text-align: center;
-          // white-space:nowrap
         }
       }
     }

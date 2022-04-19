@@ -79,7 +79,9 @@ export default {
   border-radius: 10px;
   .title {
     font-size: 16px;
+    font-family: PingFang SC-Bold, PingFang SC;
     font-weight: bold;
+    color: #333333;
     margin-bottom: 16px;
   }
   .progress {

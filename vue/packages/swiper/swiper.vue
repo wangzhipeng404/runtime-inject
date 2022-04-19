@@ -18,6 +18,7 @@ export default {
     return {
       imagesinfo: [],
       url: "",
+      emptyUrl: require("../../src/assets/empty.png")
     };
   },
   props: {
@@ -31,22 +32,35 @@ export default {
   },
   methods: {
     getDate() {
+      let that = this 
       this.axios.post(this.queryurl).then((res) => {
         console.log(res);
-        this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
-          return {
-            url: i.url,
-            img:
-              "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
-              JSON.parse(i.image)[0].source.substring(0, 3) +
-              "/img/" +
-              this.$dayjs(+JSON.parse(i.image)[0].datetime).format("YYYYMMDD") +
-              "/1000060/" +
-              JSON.parse(i.image)[0].source,
-          };
-        });
+        if (res.data.resp_data.kx_template.length) {
+          console.log("??????3333???????????");
+          this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
+            return {
+              url: i.url,
+              img:
+                "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
+                JSON.parse(i.image)[0].source.substring(0, 3) +
+                "/img/" +
+                this.$dayjs(+JSON.parse(i.image)[0].datetime).format(
+                  "YYYYMMDD"
+                ) +
+                "/1000060/" +
+                JSON.parse(i.image)[0].source,
+            };
+          });
+        }else{
+          console.log("111111");
+          console.log(that.emptyUrl);
+          this.imagesinfo = [{
+            url:"",
+            img: that.emptyUrl
+          }]
+        }
       });
-      console.log("?????????????????");
+      
       console.log(this.imagesinfo);
     },
     // getDate() {
@@ -65,7 +79,7 @@ export default {
     //   });
     // },
     link(url) {
-      console.log(url)
+      console.log(url);
       this.$xpe.run("jump", { url: url });
     },
   },
