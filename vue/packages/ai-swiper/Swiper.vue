@@ -223,8 +223,8 @@ export default {
           ctx.drawImage(img, 0, 0, canvasWidth * self.times, canvasHeight * self.times)
           if (imgData.waterMark) {
             console.log(imgData.waterMark)
-            const fontSize = imgData.fontSize || self.isAndroid ? 28 : 18
-            const lineHeight = imgData.waterMarkLineHeight || self.isAndroid ? 36 : 26
+            const fontSize = imgData.fontSize || (self.isAndroid ? 28 : 18)
+            const lineHeight = imgData.waterMarkLineHeight || (self.isAndroid ? 36 : 26)
             drawText(
               canvas, 
               imgData.waterMark, 
