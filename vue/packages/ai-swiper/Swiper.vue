@@ -197,8 +197,9 @@ export default {
       this.$xpe.emit('onChange', { index: tab })
     },
     saveImg() {
-      console.log(window.xpe_saveImage)
-      this.$xpe.bridge('saveImage', this.canvasUrl)
+      console.log('saveImage')
+      let reg = /data.+?;base64,/;
+      this.$xpe.bridge('saveImage', this.isAndroid ? this.canvasUrl : this.canvasUrl.replace(reg,''))
     },
     draw(imgData) {
       return new Promise((resovle) => {
@@ -222,8 +223,8 @@ export default {
           ctx.drawImage(img, 0, 0, canvasWidth * self.times, canvasHeight * self.times)
           if (imgData.waterMark) {
             console.log(imgData.waterMark)
-            const fontSize = imgData.fontSize || self.isAndroid ? 28 : 18
-            const lineHeight = imgData.waterMarkLineHeight || self.isAndroid ? 36 : 26
+            const fontSize = imgData.fontSize || (self.isAndroid ? 28 : 18)
+            const lineHeight = imgData.waterMarkLineHeight || (self.isAndroid ? 36 : 26)
             drawText(
               canvas, 
               imgData.waterMark, 
