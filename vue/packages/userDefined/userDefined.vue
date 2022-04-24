@@ -101,7 +101,7 @@ export default {
   .top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     .title {
       font-size: 16px;
       font-family: PingFang SC-Bold, PingFang SC;
