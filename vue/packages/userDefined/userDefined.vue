@@ -5,7 +5,7 @@
       <img src="../../src/assets/arrow_right.png" @click="link" />
     </div>
     <div class="list">
-      <table :style="{ width: `${widthTable}px` }">
+      <table :style="{ width: `${widthTable}px` }"  style="border-collapse:separate; border-spacing:0px 8px;">
         <tr class="list-item">
           <td
             class="item subtitle"
@@ -18,9 +18,11 @@
         </tr>
         <template v-for="(content, index) in content">
           <tr class="list-item" :key="index">
-            <td class="item content" v-for="(row, i) in content" :key="i">
-              {{ row }}
-            </td>
+            <template v-for="(item, i) in col">
+              <td class="item content" :key="i">
+                {{ content[`column${i + 1}`] }}
+              </td>
+            </template>
           </tr>
         </template>
       </table>
@@ -65,17 +67,17 @@ export default {
   created() {},
   mounted() {
     this.col.map((item) => {
-        console.log(item);
-        if (item.colwidth) {
-          var totalwidth = 0;
-          totalwidth+= +item.colwidth;
-          var screenX = document.body.clientWidth
-          console.log(screenX)
-          if(totalwidth<screenX){
-            this.widthTable = screenX-48;
-            this.col.map(i => i.colwidth *= this.widthTable/totalwidth)
-          }
+      console.log(item);
+      if (item.colwidth) {
+        var totalwidth = 0;
+        totalwidth += +item.colwidth;
+        var screenX = document.body.clientWidth;
+        console.log(screenX);
+        if (totalwidth < screenX) {
+          this.widthTable = screenX - 48;
+          this.col.map((i) => (i.colwidth *= this.widthTable / totalwidth));
         }
+      }
     });
     this.axios.post(this.queryurl).then((res) => {
       this.content = res.data.resp_data.kx_template;
@@ -118,12 +120,14 @@ export default {
       color: #909399;
       margin-bottom: 8px;
     }
+    .list-item{
+      margin-bottom: 8px;
+    }
     .content {
-        font-size: 14px;
-        font-family: PingFang SC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #303133;
-        margin-bottom: 8px;
+      font-size: 14px;
+      font-family: PingFang SC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #303133;
     }
   }
   .list::-webkit-scrollbar {
