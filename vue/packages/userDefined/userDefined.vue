@@ -5,7 +5,10 @@
       <img src="../../src/assets/arrow_right.png" @click="link" />
     </div>
     <div class="list">
-      <table :style="{ width: `${widthTable}px` }"  style="border-collapse:separate; border-spacing:0px 8px;">
+      <table
+        :style="{ width: `${widthTable}px` }"
+        style="border-collapse: separate; border-spacing: 0px 8px"
+      >
         <tr class="list-item">
           <td
             class="item subtitle"
@@ -36,6 +39,8 @@ export default {
     return {
       content: () => [],
       widthTable: null,
+      totalwidth: null,
+      screenX: null
     };
   },
   props: {
@@ -69,16 +74,23 @@ export default {
     this.col.map((item) => {
       console.log(item);
       if (item.colwidth) {
-        var totalwidth = 0;
-        totalwidth += +item.colwidth;
-        var screenX = document.body.clientWidth;
-        console.log(screenX);
-        if (totalwidth < screenX) {
-          this.widthTable = screenX - 48;
-          this.col.map((i) => (i.colwidth *= this.widthTable / totalwidth));
-        }
+        this.totalwidth += +item.colwidth;
+        this.screenX = document.body.clientWidth;
       }
     });
+    if (this.totalwidth < this.screenX) {
+      this.widthTable = this.screenX - 48;
+      console.log(this.col);
+      console.log(this.screenX);
+      console.log(this.widthTable);
+      console.log(this.totalwidth);
+      console.log(this.widthTable / this.totalwidth);
+      this.col.map((i) => (i.colwidth *= this.widthTable / this.totalwidth));
+      console.log("缩放列宽");
+      console.log(this.col);
+    } else {
+      this.widthTable = this.totalwidth;
+    }
     this.axios.post(this.queryurl).then((res) => {
       this.content = res.data.resp_data.kx_template;
     });
@@ -120,7 +132,7 @@ export default {
       color: #909399;
       margin-bottom: 8px;
     }
-    .list-item{
+    .list-item {
       margin-bottom: 8px;
     }
     .content {
