@@ -17,8 +17,9 @@ export default {
   data() {
     return {
       imagesinfo: [],
+      tenantcode: "",
       url: "",
-      emptyUrl: require("../../src/assets/empty.png")
+      emptyUrl: require("../../src/assets/empty.png"),
     };
   },
   props: {
@@ -28,11 +29,12 @@ export default {
     },
   },
   mounted() {
+    this.tenantcode = this.$cache.get("tenantcode");
     this.getDate();
   },
   methods: {
     getDate() {
-      let that = this 
+      let that = this;
       this.axios.post(this.queryurl).then((res) => {
         console.log(res);
         if (res.data.resp_data.kx_template.length) {
@@ -47,20 +49,24 @@ export default {
                 this.$dayjs(+JSON.parse(i.image)[0].datetime).format(
                   "YYYYMMDD"
                 ) +
-                "/1000060/" +
+                "/" +
+                this.tenantcode +
+                "/" +
                 JSON.parse(i.image)[0].source,
             };
           });
-        }else{
+        } else {
           console.log("111111");
           console.log(that.emptyUrl);
-          this.imagesinfo = [{
-            url:"",
-            img: that.emptyUrl
-          }]
+          this.imagesinfo = [
+            {
+              url: "",
+              img: that.emptyUrl,
+            },
+          ];
         }
       });
-      
+
       console.log(this.imagesinfo);
     },
     // getDate() {
