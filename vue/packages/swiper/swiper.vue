@@ -19,6 +19,7 @@ export default {
       imagesinfo: [],
       tenantcode: "",
       url: "",
+      ossConfig: {},
       emptyUrl: require("../../src/assets/empty.png"),
     };
   },
@@ -30,6 +31,7 @@ export default {
   },
   mounted() {
     this.tenantcode = this.$cache.get("tenantcode");
+    this.ossConfig = this.$cache.get("ossConfig");
     this.getDate();
   },
   methods: {
@@ -38,12 +40,11 @@ export default {
       this.axios.post(this.queryurl).then((res) => {
         console.log(res);
         if (res.data.resp_data.kx_template.length) {
-          console.log("??????3333???????????");
           this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
             return {
               url: i.url,
               img:
-                "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
+                `http://${this.ossConfig.storageurl}/`  +
                 JSON.parse(i.image)[0].source.substring(0, 3) +
                 "/img/" +
                 this.$dayjs(+JSON.parse(i.image)[0].datetime).format(

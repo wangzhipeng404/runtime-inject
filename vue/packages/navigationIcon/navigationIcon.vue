@@ -18,6 +18,7 @@ export default {
       //从协议中获取
       info: [],
       tenantcode: "",
+      ossConfig: {}
     };
   },
   props: {
@@ -29,6 +30,7 @@ export default {
   beforeCreate() {},
   created() {
     this.tenantcode = this.$cache.get("tenantcode");
+    this.ossConfig = this.$cache.get("ossConfig");
     this.init();
   },
   watch: {
@@ -50,13 +52,12 @@ export default {
     //   })
     // }
     init() {
-      console.log("000000");
       console.log(this.tenantcode);
       this.info = this.value.map((i) => {
         return {
           ...i,
           imgurl:
-            "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
+            `http://${this.ossConfig.storageurl}/` +
             JSON.parse(i.icon)[0].source.substring(0, 3) +
             "/img/" +
             this.$dayjs(+JSON.parse(i.icon)[0].datetime).format("YYYYMMDD") +
