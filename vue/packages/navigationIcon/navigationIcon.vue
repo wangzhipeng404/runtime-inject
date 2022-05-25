@@ -16,9 +16,7 @@ export default {
   data() {
     return {
       //从协议中获取
-      info: [],
-      tenantcode: "",
-      ossConfig: {}
+      info: []
     };
   },
   props: {
@@ -29,8 +27,6 @@ export default {
   },
   beforeCreate() {},
   created() {
-    this.tenantcode = this.$cache.get("tenantcode");
-    this.ossConfig = this.$cache.get("ossConfig");
     this.init();
   },
   watch: {
@@ -52,19 +48,20 @@ export default {
     //   })
     // }
     init() {
-      console.log(this.tenantcode);
       this.info = this.value.map((i) => {
+        console.log(i)
         return {
           ...i,
-          imgurl:
-            `http://${this.ossConfig.storageurl}/` +
-            JSON.parse(i.icon)[0].source.substring(0, 3) +
-            "/img/" +
-            this.$dayjs(+JSON.parse(i.icon)[0].datetime).format("YYYYMMDD") +
-            "/" +
-            this.tenantcode +
-            "/" +
-            JSON.parse(i.icon)[0].source,
+          // imgurl:
+          //   `http://${this.ossConfig.storageurl}/` +
+          //   JSON.parse(i.icon)[0].source.substring(0, 3) +
+          //   "/img/" +
+          //   this.$dayjs(+JSON.parse(i.icon)[0].datetime).format("YYYYMMDD") +
+          //   "/" +
+          //   this.tenantcode +
+          //   "/" +
+          //   JSON.parse(i.icon)[0].source,
+          imgurl: `../h5-assets/app-menu/${i.icon}.png`
         };
       });
     },
