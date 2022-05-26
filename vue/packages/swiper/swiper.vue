@@ -63,7 +63,7 @@ export default {
     // 兼容链接形式
     createImgUrl (photoValue) {
       let img = JSON.parse(photoValue)
-      img = []
+      // img = []
       let imgUrl = this.emptyUrl
       if (img && img.length) {
         img = img[0]
