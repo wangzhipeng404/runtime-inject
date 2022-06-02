@@ -49,7 +49,9 @@ xpe.install = function (Vue) {
       if (!isAndroid) {
         window[`xpe_${name}`] && window[`xpe_${name}`](...args);
       } else {
-        if (window.SmartCommonWebViewExtension && window.SmartCommonWebViewExtension[`page_xpe_${name}`]) {
+        if (window.AIWebViewExtension && window.AIWebViewExtension[`page_xpe_${name}`]) {
+          window.AIWebViewExtension[`page_xpe_${name}`](...args)
+        } else if (window.SmartCommonWebViewExtension && window.SmartCommonWebViewExtension[`page_xpe_${name}`]) {
           window.SmartCommonWebViewExtension[`page_xpe_${name}`](...args)
         } else if (window.pageObject && window.pageObject[`page_xpe_${name}`]) {
           window.pageObject[`page_xpe_${name}`](...args)
