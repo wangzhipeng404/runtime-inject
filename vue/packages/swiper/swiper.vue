@@ -17,8 +17,10 @@ export default {
   data() {
     return {
       imagesinfo: [],
+      tenantcode: "",
       url: "",
-      emptyUrl: require("../../src/assets/empty.png")
+      ossConfig: {},
+      emptyUrl: require("../../src/assets/empty.png"),
     };
   },
   props: {
@@ -28,40 +30,51 @@ export default {
     },
   },
   mounted() {
+    this.tenantcode = this.$cache.get("tenantcode");
+    this.ossConfig = this.$cache.get("ossConfig");
     this.getDate();
   },
   methods: {
     getDate() {
-      let that = this 
+      let that = this;
       this.axios.post(this.queryurl).then((res) => {
-        console.log(res);
+        // console.log(res);
+        // res.data.resp_data.kx_template = []
         if (res.data.resp_data.kx_template.length) {
-          console.log("??????3333???????????");
           this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
             return {
               url: i.url,
-              img:
-                "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
-                JSON.parse(i.image)[0].source.substring(0, 3) +
-                "/img/" +
-                this.$dayjs(+JSON.parse(i.image)[0].datetime).format(
-                  "YYYYMMDD"
-                ) +
-                "/1000060/" +
-                JSON.parse(i.image)[0].source,
+              img: this.createImgUrl(i.image)
             };
           });
-        }else{
-          console.log("111111");
-          console.log(that.emptyUrl);
-          this.imagesinfo = [{
-            url:"",
-            img: that.emptyUrl
-          }]
+        } else {
+          // console.log("111111");
+          // console.log(that.emptyUrl);
+          this.imagesinfo = [
+            {
+              url: "",
+              img: that.emptyUrl,
+            },
+          ];
         }
       });
-      
-      console.log(this.imagesinfo);
+      // console.log(this.imagesinfo);
+    },
+    // 兼容链接形式
+    createImgUrl (photoValue) {
+      let img = JSON.parse(photoValue)
+      // img = []
+      let imgUrl = this.emptyUrl
+      if (img && img.length) {
+        img = img[0]
+        if (typeof img === 'object') {
+          let date = this.$dayjs(+img.datetime).format('YYYYMMDD')
+          imgUrl = `http://${this.ossConfig.storageurl}/${img.source.substring(0,3)}/img/${date}/${this.tenantcode}/${img.source}`
+        } else if (typeof img === 'string') {
+          imgUrl = img
+        }
+      }
+      return imgUrl
     },
     // getDate() {
     //   this.axios.post(this.queryurl).then((res) => {

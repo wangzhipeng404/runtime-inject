@@ -5,18 +5,30 @@
       <img src="../../src/assets/arrow_right.png" @click="link" />
     </div>
     <div class="list">
-      <div class="subtitle">
-        <div v-for="(item, i) in col" :key="i">
-          {{ item.title }}
-        </div>
-      </div>
-      <div class="content">
-        <div v-for="(content, index) in content" :key="index">
-          <div>{{ content.column1 }}</div>
-          <div>{{ content.column2 }}</div>
-          <div>{{ content.column3 }}</div>
-        </div>
-      </div>
+      <table
+        :style="{ width: `${widthTable}px` }"
+        style="border-collapse: separate; border-spacing: 0px 8px"
+      >
+        <tr class="list-item">
+          <td
+            class="item subtitle"
+            v-for="(item, i) in col"
+            :key="i"
+            :style="{ width: `${item.colwidth}px` }"
+          >
+            {{ item.title }}
+          </td>
+        </tr>
+        <template v-for="(content, index) in content">
+          <tr class="list-item" :key="index">
+            <template v-for="(item, i) in col">
+              <td class="item content" :key="i">
+                {{ content[`column${i + 1}`] }}
+              </td>
+            </template>
+          </tr>
+        </template>
+      </table>
     </div>
   </div>
 </template>
@@ -26,6 +38,9 @@ export default {
   data() {
     return {
       content: () => [],
+      widthTable: null,
+      totalwidth: null,
+      screenX: null
     };
   },
   props: {
@@ -56,6 +71,26 @@ export default {
   },
   created() {},
   mounted() {
+    this.col.map((item) => {
+      console.log(item);
+      if (item.colwidth) {
+        this.totalwidth += +item.colwidth;
+        this.screenX = document.body.clientWidth;
+      }
+    });
+    if (this.totalwidth < this.screenX) {
+      this.widthTable = this.screenX - 48;
+      console.log(this.col);
+      console.log(this.screenX);
+      console.log(this.widthTable);
+      console.log(this.totalwidth);
+      console.log(this.widthTable / this.totalwidth);
+      this.col.map((i) => (i.colwidth *= this.widthTable / this.totalwidth));
+      console.log("缩放列宽");
+      console.log(this.col);
+    } else {
+      this.widthTable = this.totalwidth;
+    }
     this.axios.post(this.queryurl).then((res) => {
       this.content = res.data.resp_data.kx_template;
     });
@@ -78,7 +113,7 @@ export default {
   .top {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     .title {
       font-size: 16px;
       font-family: PingFang SC-Bold, PingFang SC;
@@ -89,34 +124,22 @@ export default {
   .list {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    text-align: center;
     .subtitle {
       font-size: 14px;
       font-family: PingFang SC-Regular, PingFang SC;
       font-weight: 400;
       color: #909399;
       margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      & > div {
-        display: inline-block;
-        flex: 0 0 33.333%;
-        text-align: center;
-      }
+    }
+    .list-item {
+      margin-bottom: 8px;
     }
     .content {
-      & > div {
-        display: flex;
-        justify-content: space-between;
-        font-size: 14px;
-        font-family: PingFang SC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #303133;
-        margin-bottom: 8px;
-        & > div {
-          flex: 0 0 33.333%;
-          text-align: center;
-        }
-      }
+      font-size: 14px;
+      font-family: PingFang SC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #303133;
     }
   }
   .list::-webkit-scrollbar {
