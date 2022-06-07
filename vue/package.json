@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint",
+    "dev:shell": "vue-cli-service serve ./src/components/Shell/shell.js",
     "dev:lib": "vue-cli-service serve ./dev.js",
+    "lib:shell": "vue-cli-service build --target lib --dest dist/shell --name shell ./src/components/Shell/Shell.vue",
     "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue"
   },
   "dependencies": {
@@ -19,6 +21,7 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.7",
     "echarts": "^5.2.2",
+    "stylus": "^0.58.1",
     "vant": "^2.12.30",
     "vconsole": "^3.9.4",
     "vue": "^2.6.11",
