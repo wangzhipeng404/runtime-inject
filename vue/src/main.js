@@ -7,7 +7,7 @@ Vue.use(Shell)
 new Vue({
   data: {
     styleStr: '',
-    code: '{}',
+    code: '',
     template: '',
     mode: 'prod',
   },
