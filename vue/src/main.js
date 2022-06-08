@@ -1,27 +1,10 @@
-import Vue from 'vue'
-import Vant, { ImagePreview } from 'vant';
-import 'vant/lib/index.css';
+import Vue from './extend'
 import * as Babel from '@babel/standalone'
 import vuejsx from '@vue/babel-preset-jsx'
 import mergeProps from '@vue/babel-helper-vue-jsx-merge-props'
 import vconsole from 'vconsole'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import dayjs from 'dayjs'
-import * as echarts from 'echarts';
-import myRequire from './utils/require'
-import xpe from './utils/xpe'
-Babel.registerPreset('vue-jsx', vuejsx)
-Vue.prototype.$echarts = echarts
-Vue.use(Vant);
-Vue.use(VueAxios, axios)
-Vue.use(myRequire)
-Vue.use(xpe)
 
-Vue.prototype.$imagePreview = ImagePreview
-Vue.config.productionTip = false
-Vue.prototype.$dayjs = dayjs
-Vue.prototype.$cache = new Map()
+Babel.registerPreset('vue-jsx', vuejsx)
 
 new Vue({
   data: {
