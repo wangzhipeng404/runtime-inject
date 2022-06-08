@@ -1,74 +1,14 @@
-import Vue from 'vue'
-import Vant, { ImagePreview } from 'vant';
-import 'vant/lib/index.css';
-import * as Babel from '@babel/standalone'
-import vuejsx from '@vue/babel-preset-jsx'
-import mergeProps from '@vue/babel-helper-vue-jsx-merge-props'
+import Vue from './extend'
 import vconsole from 'vconsole'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import dayjs from 'dayjs'
-import * as echarts from 'echarts';
-import myRequire from './utils/require'
-import xpe from './utils/xpe'
-Babel.registerPreset('vue-jsx', vuejsx)
-Vue.prototype.$echarts = echarts
-Vue.use(Vant);
-Vue.use(VueAxios, axios)
-Vue.use(myRequire)
-Vue.use(xpe)
+import Shell from './components/Shell';
 
-Vue.prototype.$imagePreview = ImagePreview
-Vue.config.productionTip = false
-Vue.prototype.$dayjs = dayjs
-Vue.prototype.$cache = new Map()
+Vue.use(Shell)
 
 new Vue({
   data: {
     styleStr: '',
     code: '',
     mode: 'prod',
-  },
-  computed: {
-    style () {
-      if (this.styleStr) {
-        return window.stylus.render(this.styleStr)
-      }
-      return ''
-    },
-    component () {
-      let temp = { template: '<van-skeleton :row="10" />' }
-      if (!this.code) {
-        return temp
-      }
-      try {
-        const code = Babel.transform(`var obj = ${this.code}`, { 
-          presets: ['es2015', 'vue-jsx'],
-        }).code
-        if (this.mode === 'dev') {
-          console.log(code)
-        }
-        const fn = new Function ('mergeProps', `${code.replace('"use strict";\n', '').replace('require("@vue/babel-helper-vue-jsx-merge-props")', 'mergeProps')}\nreturn obj;`)
-        temp = fn(mergeProps)
-      } catch (e) {
-        temp = {
-          data () {
-            return {
-              msg: e
-            }
-          },
-          render (h) {
-            return h('div', {
-              style: {
-                color: 'red'
-              }
-            },
-            JSON.stringify(e, null, 2))
-          }
-        }
-      }
-      return temp
-    }
   },
   created () {
     this.$xpe.clean()
@@ -108,12 +48,6 @@ new Vue({
     this.$xpe.emit('ready')
   },
   render () {
-    const Component = this.component
-    return (
-      <div>
-        <style>{this.style}</style>
-        <Component />
-      </div>
-    )
+    return <Shell styleStr={this.styleStr} code={this.code} mode={this.mode} />
   },
 }).$mount('#app')
