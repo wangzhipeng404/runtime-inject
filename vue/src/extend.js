@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import Vant, { ImagePreview } from 'vant';
-import 'vant/lib/index.css';
+import Vant, { ImagePreview } from 'vant'
+import 'vant/lib/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import dayjs from 'dayjs'
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 import myRequire from './utils/require'
 import xpe from './utils/xpe'
 
@@ -19,4 +19,5 @@ Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs
 Vue.prototype.$cache = new Map()
 
+window.Vue = Vue
 export default Vue

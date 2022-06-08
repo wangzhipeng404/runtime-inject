@@ -7,7 +7,8 @@ Vue.use(Shell)
 new Vue({
   data: {
     styleStr: '',
-    code: '',
+    code: '{}',
+    template: '',
     mode: 'prod',
   },
   created () {
@@ -31,6 +32,9 @@ new Vue({
     this.$xpe.on('setStyle', data => {
       this.styleStr = data
     })
+    this.$xpe.on('setTemplate', data => {
+      this.template = data
+    })
     this.$xpe.on('openConsole', () => {
       if (!this.vconsole) {
         this.vconsole = new vconsole()
@@ -48,6 +52,6 @@ new Vue({
     this.$xpe.emit('ready')
   },
   render () {
-    return <Shell styleStr={this.styleStr} code={this.code} mode={this.mode} />
+    return <Shell styleStr={this.styleStr} code={this.code} template={this.template} mode={this.mode} />
   },
 }).$mount('#app')

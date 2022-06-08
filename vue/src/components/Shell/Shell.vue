@@ -16,10 +16,14 @@ export default {
       type: String,
       default: ''
     },
+    template: {
+      type: String,
+      default: ''
+    },
     mode: {
       type: String,
       default: 'prod'
-    }
+    },
   },
   computed: {
     style () {
@@ -41,7 +45,13 @@ export default {
           console.log(code)
         }
         const fn = new Function ('mergeProps', `${code.replace('"use strict";\n', '').replace('require("@vue/babel-helper-vue-jsx-merge-props")', 'mergeProps')}\nreturn obj;`)
-        temp = fn(mergeProps)
+        let obj = fn(mergeProps)
+        const template = this.template.replace(/^\s*<\s*template\s*>|<\/\s*template\s*>\s*$/gs, '').trim()
+        if (template) {
+          obj.template = template
+          obj.render = undefined
+        }
+        temp = obj
       } catch (e) {
         temp = {
           data () {

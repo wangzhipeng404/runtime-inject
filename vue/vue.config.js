@@ -2,7 +2,7 @@ module.exports = {
   runtimeCompiler: true,
   configureWebpack: {
     externals: {
-      stylus: 'stylus'
+      // stylus: 'stylus'
     }
   },
   publicPath: './',
