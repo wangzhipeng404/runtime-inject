@@ -112,7 +112,7 @@ export default {
           },
           {
             type: 'text',
-            text: '扫一扫下面的小程序码，加入门店',
+            text: '扫一扫下面的小程序码，注册RMS门店',
             css: {
               left: '0px',
               top: `${180 * 10}px`,
@@ -164,6 +164,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.query.appid)
     this.$xpe.on('shared', () => {
       this.showBtn = true
     })
