@@ -14,9 +14,9 @@ export default {
       query: {
         "appid": 'wx81ede3953d348969',
         "user": {
-          positionID: "1478989804644470784",
-          userinfoName: "陈畅",
-          positionName: "全权限-勿删",
+          positionID: "1536622815460069376",
+          userinfoName: "营销云-演示账号",
+          positionName: "营销云-演示职位",
         },
         'storeInfo': {
           storeid: '19775392',
@@ -26,8 +26,8 @@ export default {
     }
   },
   created () {
-    this.axios.defaults.baseURL = 'http://101.200.205.231:7000/'
-    this.axios.defaults.headers['token'] = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTUxODMyNjUsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNDc4NTUyMzUwNzM3MTc0NTI4IiwiYWNjb3VudENvZGUiOiIxNDc4NTUyMzUwNzIwMzk3MzEyIiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjozLCJ0b2tlbklkIjoiMGU1NjZkY2UtNDQ5MS00MzQ5LThhZGEtNzFmNDRmYjY5NjQ1Iiwib3JnQ29kZSI6IjEiLCJ1c2VySW5mb0lkIjoiMTQ3ODU1MjM1MDkwMDc1MjM4NCIsInVzZXJJbmZvTmFtZSI6IumZiOeVhSIsInBvc2l0aW9uQ29kZSI6IjE0Nzg5ODk4MDQ2NDQ0NzA3ODQiLCJwb3NpdGlvbk5hbWUiOiLlhajmnYPpmZAt5Yu_5YigIiwibWVtYmVyQ29kZSI6IjE0Nzg5OTA0MDIxMjcyNjk4ODgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxMzAwNzI4NjE0NTM0Mzg1NjY0IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMSIsInVzZXJOYW1lIjoiMTAwMDA2MCIsInVzZXJOYW1lMSI6IjEwMDAwNjAiLCJ1c2VyTmFtZTIiOiIyNjA2NTUwNzlAcXEuY29tIiwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6InNhbGVzIiwiYXBwQ29kZXMiOlsiZGlzdHJpYnV0aW9uIiwicHJvbW90aW9uIiwic2FsZXMiXSwic3ViUGRDb2RlcyI6WyJzZmEiLCJkbXMiLCJwbW0iLCJ0cG0iXSwiY29kZXBhdGgiOiIxLiIsImlzbGVhZm9yZyI6ImZhbHNlIiwibWV0YW1vZGVsdHlwZSI6MSwiaXNTbXNMb2dpbiI6ZmFsc2V9fQ.EIdkTJz-OyzHJnPcKM0dOFq_Q6WAjNI4YOfXBCqDBP4"
+    this.axios.defaults.baseURL = ''
+    this.axios.defaults.headers['token'] = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTUyNjY2NTUsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTM2NTYxOTg2MTkwNTc3NjY0IiwiYWNjb3VudENvZGUiOiIxNTM2NTYxOTg1ODUwODM5MDQwIiwidGVuYW50Q29kZSI6IjEwMDkwMDQiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjoxLCJ0b2tlbklkIjpudWxsLCJvcmdDb2RlIjpudWxsLCJ1c2VySW5mb0lkIjpudWxsLCJ1c2VySW5mb05hbWUiOm51bGwsInBvc2l0aW9uQ29kZSI6bnVsbCwicG9zaXRpb25OYW1lIjpudWxsLCJtZW1iZXJDb2RlIjpudWxsLCJyZWZQb3NpdGlvbkNvZGUiOm51bGwsImNhdGVnb3J5Q29kZSI6bnVsbCwib3JnU3RydWN0VHlwZUlkIjpudWxsLCJ1c2VyTmFtZSI6IjE3NzEiLCJ1c2VyTmFtZTEiOiIxMzUxMjc3MTc3MSIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjoiMTc3MSIsInRlbmFudE5hbWUiOm51bGwsImFwcENvZGUiOm51bGwsImFwcENvZGVzIjpudWxsLCJzdWJQZENvZGVzIjpudWxsLCJjb2RlcGF0aCI6bnVsbCwiaXNsZWFmb3JnIjpudWxsLCJtZXRhbW9kZWx0eXBlIjoyLCJpc1Ntc0xvZ2luIjpmYWxzZX19.F2QcwlZLLWAv0XiJV3Dteo7h_IYvK81YAqQvER-av8s"
   }
 }
 </script>

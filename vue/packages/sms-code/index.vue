@@ -172,7 +172,7 @@ export default {
       message: '加载中...',
       forbidClick: true,
     })
-    this.$http.post('/miniapi/sms/getqrcode',{
+    this.$http.post('/miniapi/sms/getrmsqrcode',{
       appid: this.query && this.query.appid,
       path: '/pages/login/login',
       storeId: this.query && this.query.storeInfo && this.query.storeInfo.storeid,
