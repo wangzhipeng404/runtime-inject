@@ -177,6 +177,8 @@ export default {
       path: '/pages/login/login',
       storeId: this.query && this.query.storeInfo && this.query.storeInfo.storeid,
       storeName: this.query && this.query.storeInfo && this.query.storeInfo.storename,
+      storeCode: this.query && this.query.storeInfo && this.query.storeInfo.storecode,
+      customerType: this.query && this.query.storeInfo && this.query.storeInfo.customertype,
       codeType: '1',
       // openId: this.user.openId,
       line_color: { r: 0, g: 0, b: 0 }
@@ -218,7 +220,10 @@ export default {
     },
     saveImg() {
       if (!this.canSave) return;
-      this.$xpe.bridge('saveImage', this.poster)
+      const u = navigator.userAgent;
+      const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+      let reg = /data.+?;base64,/;
+      this.$xpe.bridge('saveImage', isAndroid ? this.poster : this.poster.replace(reg,''))
     },
     onShare () {
       this.showBtn = false
@@ -255,9 +260,9 @@ export default {
     .btn {
       display: block;
       padding: 0;
-      margin: 0 38px;
+      margin: 0 28px;
       text-align: center;
-      width: 80px;
+      width: 100px;
       font-size: font-md;
       color: #999999;
       img {

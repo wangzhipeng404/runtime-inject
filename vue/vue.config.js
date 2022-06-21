@@ -8,7 +8,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/miniapi': {
-        target: 'http://172.16.72.78:8021',
+        target: 'http://120.24.27.225:7000',
         ws: true,
         changeOrigin: true
       },
