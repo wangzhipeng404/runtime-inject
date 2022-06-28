@@ -1,8 +1,17 @@
 import Vue from './extend'
+<<<<<<< HEAD
 import vconsole from 'vconsole'
 import Shell from './components/Shell';
 
 Vue.use(Shell)
+=======
+import * as Babel from '@babel/standalone'
+import vuejsx from '@vue/babel-preset-jsx'
+import mergeProps from '@vue/babel-helper-vue-jsx-merge-props'
+import vconsole from 'vconsole'
+
+Babel.registerPreset('vue-jsx', vuejsx)
+>>>>>>> master
 
 new Vue({
   data: {

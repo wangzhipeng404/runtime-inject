@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint",
     "dev:shell": "vue-cli-service serve ./src/components/Shell/shell.js",
     "dev:lib": "vue-cli-service serve ./dev.js",
+    "dev:page": "vue-cli-service serve ./dev.js",
     "lib:shell": "vue-cli-service build --target lib --dest dist/shell --name shell ./src/components/Shell/Shell.vue",
     "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue"
   },
