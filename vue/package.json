@@ -7,6 +7,7 @@
     "build": "vue-cli-service build --no-clean",
     "lint": "vue-cli-service lint",
     "dev:lib": "vue-cli-service serve ./dev.js",
+    "dev:page": "vue-cli-service serve ./dev.js",
     "lib:hello": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/hello --name hello ./packages/hello/hello.vue",
     "lib:aiswiper": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/ai-swiper --name AISwiper ./packages/ai-swiper/Swiper.vue",
     "lib:smscode": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/sms-code --name SmsCode ./packages/sms-code/index.vue",

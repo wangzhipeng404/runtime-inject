@@ -21,6 +21,14 @@ export default {
     };
   },
   props: {
+    native: {
+      type: Boolean,
+      default: false
+    },
+    notices: {
+      type: Array,
+      default: () => [],
+    },
     queryurl: {
       type: String,
       default: "",
@@ -30,10 +38,21 @@ export default {
       default: "",
     },
   },
+  watch: {
+    notices (val) {
+      if (this.native) {
+        this.message = val
+      }
+    }
+  },
   mounted() {
-    this.axios.post(this.queryurl).then((res) => {
-      this.message = res.data.resp_data.kx_template;
-    });
+    if (this.native) {
+      this.message = this.notices
+    } else {
+      this.axios.post(this.queryurl).then((res) => {
+        this.message = res.data.resp_data.kx_template;
+      });
+    }
   },
   methods: {
     link(url) {

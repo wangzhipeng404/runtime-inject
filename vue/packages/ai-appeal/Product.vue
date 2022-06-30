@@ -93,9 +93,8 @@ export default {
 .item{
   display: flex;
   border-bottom:1px solid #dedede;
-  height:40px;
-  line-height: 40px;
-  padding:0 10px;
+  line-height: 1.5;
+  padding: 10px;
   font-size: 14px;
 }
 .product-img{
