@@ -6,6 +6,7 @@ module.exports = {
     }
   },
   devServer: {
+    contentBase: ['public', 'dist'],
     proxy: {
       '/api': {
         target: 'http://101.200.205.231:7000',

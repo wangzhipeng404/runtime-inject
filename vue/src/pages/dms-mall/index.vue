@@ -2,10 +2,13 @@
 export default {
   data () {
     return {
-      mallEmpty: '/dist/h5-assets/mall_empty.png',
-      searchIcon: '~../dist/h5-assets/icon_search@2x.png',
-      cartIconDefault: '../../../dist/h5-assets/shopping_icon_add_default.png',
-      cartIconActive: '../../../dist/h5-assets/shopping_icon_add_active.png',
+      mallEmpty: '/h5-assets/mall_empty.png',
+      searchIcon: '/h5-assets/icon_search.png',
+      addIconDefault: '/h5-assets/icon_add_disabled.png',
+      addIconActive: '/h5-assets/icon_add.png',
+      starDefault: '/h5-assets/icon_star_normal.png',
+      starActive: '/h5-assets/icon_star_selected.png',
+      cartIcon: '/h5-assets/icon_cart.png',
       loading: true,
       showCostPlan: false,
       showPlanDetail: false,
@@ -25,24 +28,30 @@ export default {
       checkedPlan: [],
       authconfig: 0,
       costText: '',
-      beforePlanDialogClose () {}
+      beforePlanDialogClose () {},
+      tenantcode: '1000060',
+      ossConfig: {
+        provider: "aliyun",
+        storagebucket: "xtionai-storage-test",
+        storageendpoint: "oss-cn-shenzhen.aliyuncs.com",
+        storageurl: "xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com"
+      }
     }
   },
   computed: {
   },
   beforeCreate () {
-    this.axios.defaults.headers.common["token"] = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTY0MDU5NTUsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjoxLCJ0b2tlbklkIjoiYzAzNDkyNDYtNGUwMS00ZDVkLWFjYzYtZmVjNDI5ZmY3Zjk0Iiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbInNhbGVzIiwicHJvbW90aW9uIiwiZGlzdHJpYnV0aW9uIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.7fLYpJ6d70Lt6mWE6c5GoJPd8hG_QXx6PoYHYqCKYPI';
-    this.axios.defaults.baseURL = "/api/teapi/dy-biz";
   },
   created () {
+    this.axios.defaults.headers.common["token"] = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTY5MTg1ODAsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjoxLCJ0b2tlbklkIjoiMzM1ZmZiNzktYzQ0Ny00ZWVmLTg4YzItNDdmZDZjOGYxZTgzIiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbImRpc3RyaWJ1dGlvbiIsInByb21vdGlvbiIsInNhbGVzIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.4jvL8ADdIA4z_kSuVVB_sco-_2laG6zyqQ5kNo6UqYQ';
+    this.axios.defaults.baseURL = "/api/teapi/dy-biz";
     // const user = localStorage.getItem('distributionData')
     this.channelcode = 'QD0000000593'
     this.query = {}
     this.beforePlanDialogClose = (action) => {
       if (action === 'confirm' && this.checkedPlan.length === 0) {
         this.$toast({
-          title: '请选择活动规则',
-          icon: 'none'
+          message: '请选择活动规则'
         })
         return false
       }
@@ -101,7 +110,8 @@ export default {
       this.list = kx_kq_product.map(p => {
         const image = p.productimage ? JSON.parse(p.productimage) : []
         if (image.length > 0) {
-          p.imageUrl = ''
+          const objectkey = `${image[0].source.slice(0, 3)}/img/${this.$dayjs(+image[0].datetime).format('YYYYMMDD')}/${this.tenantcode}/${image[0].source}`
+          p.imageUrl = `https://${this.ossConfig.storageurl}/${objectkey}`
         }
         return {
           ...p,
@@ -128,8 +138,7 @@ export default {
         return data
       })
       this.$toast({
-        title: p.iscollection === '1' ? '取消成功' : '收藏成功',
-        icon: 'none'
+        message: p.iscollection === '1' ? '取消成功' : '收藏成功',
       })
       this.collecting = false
       this.getData()
@@ -185,8 +194,7 @@ export default {
     async addToCart (hasPlan) {
       if (hasPlan && this.checkedPlan.length === 0) {
         this.$toast({
-          title: '请选择活动规则',
-          icon: 'none'
+          message: '请选择活动规则'
         })
         return false
       }
@@ -198,7 +206,7 @@ export default {
         '手工搭赠': '954254252933517312',
         '自动搭赠': '954254203071631360'
       }
-      await ({
+      await this.axios({
         url: `/1491976446623748195/1494632923264061519`,
         method: 'post',
         data: {
@@ -229,8 +237,7 @@ export default {
         return data
       })
       this.$toast({
-        title: '添加成功',
-        icon: 'none'
+        message: '添加成功',
       })
       await this.getData()
       this.adding = false
@@ -356,7 +363,7 @@ export default {
                     name={item.dickey}
                     custom-class="brand-checkbox"
                   >
-                    <text class="checkbox-text">{item.dicvalue}</text>
+                    <span class="checkbox-text">{item.dicvalue}</span>
                   </van-checkbox>
                 ))}
                 </div>
@@ -411,8 +418,8 @@ export default {
                       <div class="item-title">{item.productname}</div>
                       <div class="icon" on-click={() => this.changeCollection(item)}>
                       <van-icon
-                        name={ item.iscollection == '1' ? 'star' : 'star-o' }
-                        size="18"
+                        name={ item.iscollection == '1' ? this.starActive : this.starDefault }
+                        size="22"
                         color="#FF411C"
                       />
                       </div>
@@ -427,8 +434,8 @@ export default {
                 </div>
                 <div class="item-footer">
                   <div class="price-wrap">
-                    <text class="item-price">{item.adviceprice}</text>
-                    <text class="item-uint"> / 箱</text>
+                    <span class="item-price">{item.adviceprice}</span>
+                    <span class="item-uint"> / {item.distributionunitname}</span>
                   </div>
                   <div class="item-activities">
                   {item.costlabel.map(cost => (
@@ -446,7 +453,7 @@ export default {
                   </div>
                   <div class="cart-btn" on-click={() => this.choosePlan(item)}>
                     <van-icon
-                      name={item.ischoice == 1 ? this.cartIconDefault : this.cartIconActive }
+                      name={item.ischoice == 1 ? this.addIconDefault : this.addIconActive }
                       size="22"
                     />
                   </div>
@@ -454,6 +461,9 @@ export default {
               </div>
             ))}
           </div>
+        </div>
+        <div class="cart-box">
+          <van-icon size="30px" name={this.cartIcon} badge={5} />
         </div>
         <van-dialog
           use-slot
@@ -530,7 +540,7 @@ export default {
                       {rule.desc.map(desc => (
                         <div class="rule-row" key={desc.name}>
                           <div class="lable">
-                            {desc.name}{ desc.value.length > 0 && <text wx:if="{{}}">：</text>}
+                            {desc.name}{ desc.value.length > 0 && <span wx:if="{{}}">：</span>}
                           </div>
                           <div class="detail">
                           {desc.value.map(item => (
@@ -547,11 +557,6 @@ export default {
           ))}
           </div>
         </van-dialog>
-        {this.query.mode === 'edit' && (
-          <div class="footer">
-            <van-button block type="info" on-click={this.addComplete} custom-class="footer-btn">添加完成</van-button>
-          </div>
-        )}
       </div>
     )
   }
@@ -559,6 +564,8 @@ export default {
 </script>
 
 <style lang='stylus'>
+div
+  box-sizing border-box
 .mall-container
   .filter-wrap
     position fixed
@@ -589,7 +596,7 @@ export default {
         .checkbox-text
           margin-right 16px
   .tab-bar
-    height calc(100vh - 48px)
+    height 100vh
   .edit
     height 100vh
     padding-bottom calc(60px + constant(safe-area-inset-bottom))
@@ -600,6 +607,7 @@ export default {
     padding-top 115px
     .left
       height 100%
+      padding-bottom 120px
       background-color #f7f8fa
       overflow scroll
       .siderbar-item
@@ -609,7 +617,7 @@ export default {
         font-size 14px
         .icon
           position absolute
-          top 5px
+          top 4px
           right -20px
     .right
       flex 1
@@ -640,13 +648,13 @@ export default {
           .item-right-top
             position relative
             .item-title
-              padding-right 18px
+              padding-right 22px
               font-size 16px
               color #333
               word-break break-all
             .icon
               position absolute
-              top 2px
+              top -2px
               right -4px
               padding 0 4px
           .item-limit
@@ -679,6 +687,17 @@ export default {
             .item-uint
               font-size 14px
               color #999
+.cart-box
+  box-sizing border-box
+  position fixed
+  left 18px
+  bottom 46px
+  z-index 99
+  width 44px
+  height 44px
+  padding 7px
+  border-radius 44px
+  background #ffffff
 .activity-dialog-title
   font-size 16px
   text-align center
