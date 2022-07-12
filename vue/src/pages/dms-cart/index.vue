@@ -68,7 +68,7 @@ export default {
     }
   },
   created () {
-    this.axios.defaults.headers.common["token"] = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTc1MjY3NjAsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjo2LCJ0b2tlbklkIjoiNGM0ZTBiMmYtMjMyOC00OWExLWE3YjItMGQyNzViZGJjMzY1Iiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbImRpc3RyaWJ1dGlvbiIsInByb21vdGlvbiIsInNhbGVzIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.xoijqvXx2Is3XtUdKCuHjv_OI0KxZmEHBTS9BkU6Qi4';
+    this.axios.defaults.headers.common["token"] = localStorage.getItem('token');
     this.axios.defaults.baseURL = "/api/teapi/dy-biz";
     // const user = localStorage.getItem('distributionData')
     this.channelcode = 'QD0000000593'
@@ -502,16 +502,17 @@ export default {
           </div>
         </div>
         <van-action-sheet 
-          show={ this.show }
+          v-model={ this.show }
           title="选择活动商品"
+          lock-scroll
           bind:close="toggleShow"
         >
           <div 
             class="chose-product-content-wrap"
             style={ 'padding-bottom: ' + this.query.mode != 'edit' ? '60px' : '24px' }
           >
-            <van-checkbox-group value={this.checkedProducts} on-change={this.onSelectProduct}>
-              <scroll-view class="product-list" scroll-y="{{true}}">
+            <van-checkbox-group v-model={this.checkedProducts}>
+              <div class="product-list">
                 <div class="list-content">
                 {this.products.map((item, index) => (
                   <div class="item-row" key={item.productid}>
@@ -522,7 +523,7 @@ export default {
                   </div>
                 ))}
                 </div>
-              </scroll-view>
+              </div>
             </van-checkbox-group>
             <div class="btn-wrap">
               <van-button 
@@ -686,6 +687,7 @@ export default {
   padding 24px 0
   .product-list
     height 50vh
+    overflow-y auto
     .list-content
       padding 0 24px 24px 24px
     .item-row

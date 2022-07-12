@@ -43,19 +43,19 @@ export default {
   beforeCreate () {
   },
   created () {
-    this.axios.defaults.headers.common["token"] = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTY5MTg1ODAsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjoxLCJ0b2tlbklkIjoiMzM1ZmZiNzktYzQ0Ny00ZWVmLTg4YzItNDdmZDZjOGYxZTgzIiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbImRpc3RyaWJ1dGlvbiIsInByb21vdGlvbiIsInNhbGVzIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.4jvL8ADdIA4z_kSuVVB_sco-_2laG6zyqQ5kNo6UqYQ';
+    this.axios.defaults.headers.common["token"] = ' eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTc2MTY4NzEsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjo2LCJ0b2tlbklkIjoiMGQwNzkxNWYtZDE3MC00ZWM4LWE4NjctYzAxMjg2N2E2NDk3Iiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbInNhbGVzIiwicHJvbW90aW9uIiwiZGlzdHJpYnV0aW9uIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.rsGghKQwnL4CYXuO9av2H8KK607sg6Niqv8XuJmwjqM';
     this.axios.defaults.baseURL = "/api/teapi/dy-biz";
     // const user = localStorage.getItem('distributionData')
     this.channelcode = 'QD0000000593'
     this.query = {}
-    this.beforePlanDialogClose = (action) => {
+    this.beforePlanDialogClose = (action, done) => {
       if (action === 'confirm' && this.checkedPlan.length === 0) {
         this.$toast({
           message: '请选择活动规则'
         })
-        return false
+        done(false)
       }
-      return true
+      done(true)
     }
     this.fetchDim()
     this.getData()
@@ -239,6 +239,7 @@ export default {
       this.$toast({
         message: '添加成功',
       })
+      this.showCostPlan = false
       await this.getData()
       this.adding = false
     },
@@ -441,7 +442,7 @@ export default {
                   {item.costlabel.map(cost => (
                     <van-tag 
                       key={cost.key}
-                      custom-class="ac-tag"
+                      class="ac-tag"
                       color="rgba(255, 244, 233, 0.39)"
                       text-color="#FFC589"
                       size="medium"
@@ -468,7 +469,7 @@ export default {
         <van-dialog
           use-slot
           use-title-slot
-          show={ this.showCostPlan }
+          v-model={ this.showCostPlan }
           show-cancel-button
           confirm-button-text="加入购物车"
           confirm-button-color="#1678FF"
@@ -480,7 +481,7 @@ export default {
             选择活动
           </div>
           <div class="activity-content">
-            <van-checkbox-group value={this.checkedPlan} on-change={this.onPlanChange}>
+            <van-checkbox-group v-model={this.checkedPlan}>
             {this.costPlans.map(cost => (
               <div class="activity-wrap" key={cost.costid}>
                 <div class="activity-title">{cost.costname}</div>
@@ -520,7 +521,7 @@ export default {
         <van-dialog
           use-slot
           use-title-slot
-          show={ this.showPlanDetail }
+          v-model={ this.showPlanDetail }
           confirm-button-text="确认"
           confirm-button-color="#1678FF"
           on-confirm={() => this.togglePlanDetail(true)}
@@ -540,13 +541,13 @@ export default {
                       {rule.desc.map(desc => (
                         <div class="rule-row" key={desc.name}>
                           <div class="lable">
-                            {desc.name}{ desc.value.length > 0 && <span wx:if="{{}}">：</span>}
+                            {desc.name}{ desc.value.length > 0 && <span>：</span>}
                           </div>
                           <div class="detail">
-                          {desc.value.map(item => (
-                            <div key={item}>{{item}};</div>
+                          {desc.value.map(text => (
+                            <div key={text}>{text};</div>
                           ))}
-                          </div>
+                          </div>v
                         </div>
                       ))}
                     </div>
