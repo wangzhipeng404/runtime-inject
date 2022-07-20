@@ -30,7 +30,7 @@ export default {
   methods: {
     async getData () {
       const list = await this.axios({
-        url: `/1491976446623748195/1495954154743533647`,
+        url: '/1491976446623748195/1495954154743533647',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -45,14 +45,14 @@ export default {
     },
     async submit () {
       await this.axios({
-        url: `/1491976446623748195/1502482353363226709`,
+        url: '/1491976446623748195/1502482353363226709',
         method: 'post',
         data: {
             tn_kx_cost_cust_book: this.list,
             ka_kq_channelcustomers: {
               channelcode: this.channelcode,
               orderid: this.query.orderid,
-              amount: `${this.query.amount}`,
+              amount: '' + this.query.amount ,
               accounttype: ''
             }
           }

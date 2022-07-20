@@ -28,7 +28,7 @@ export default {
   methods: {
     async getData () {
       const list = await this.axios({
-        url: `/1491976446623748195/1502482353363226715`,
+        url: '/1491976446623748195/1502482353363226715',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -70,7 +70,7 @@ export default {
             name: p.name,
             tn_id: p.tn_id,
             productcode: p.productcode,
-            batchcount: `${p.tn_productcount || 0}`,
+            batchcount: String(p.tn_productcount || 0),
             price: p.price,
             tn_beuse: (Number(p.tn_productcount || 0) * Number(p.price)).toFixed(2)
           })
@@ -83,14 +83,14 @@ export default {
         return
       }
       await this.axios({
-        url: `/1491976446623748195/1495976712549306447`,
+        url: '/1491976446623748195/1495976712549306447',
         method: 'post',
         data: {
             tn_kx_cost_cust_book: arr,
             ka_kq_channelcustomers: {
               channelcode: this.channelcode,
               orderid: this.query.orderid,
-              amount: `${this.query.amount}`,
+              amount: '' + this.query.amount,
               accounttype: ''
             }
           }

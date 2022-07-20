@@ -30,7 +30,7 @@ export default {
   methods: {
     async getData () {
       let list = await this.axios({
-        url: `/1108546657601065058/1128622639842201699`,
+        url: '/1108546657601065058/1128622639842201699',
         method: 'post',
         data: {
           ka_kq_channelcustomers: {

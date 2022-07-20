@@ -71,7 +71,7 @@ export default {
     },
     async fetchDim () {
       const { dimonsionname, dimone, dimtwo } = await this.axios({
-        url: `/1491976446623748195/1494632923264061530`,
+        url: '/1491976446623748195/1494632923264061530',
         method: 'post',
         data: {}
       }).then(res => {
@@ -86,7 +86,7 @@ export default {
       this.loading = true
       console.log(this.activeKey)
       const { kx_kq_product, authconfig } = await this.axios({
-        url: `/1491976446623748195/1496043096784375824`,
+        url: '/1491976446623748195/1496043096784375824',
         method: 'post',
         data: {
           kx_kq_product: {
@@ -110,8 +110,8 @@ export default {
       this.list = kx_kq_product.map(p => {
         const image = p.productimage ? JSON.parse(p.productimage) : []
         if (image.length > 0) {
-          const objectkey = `${image[0].source.slice(0, 3)}/img/${this.$dayjs(+image[0].datetime).format('YYYYMMDD')}/${this.tenantcode}/${image[0].source}`
-          p.imageUrl = `https://${this.ossConfig.storageurl}/${objectkey}`
+          const objectkey = image[0].source.slice(0, 3) + '/img/' + this.$dayjs(+image[0].datetime).format('YYYYMMDD') + '/' + this.tenantcode + '/' + image[0].source;
+          p.imageUrl = 'https://' + this.ossConfig.storageurl + '/' + objectkey
         }
         return {
           ...p,
@@ -124,7 +124,7 @@ export default {
       if (this.collecting) return
       this.collecting = true
       await this.axios({
-        url: `/1491976446623748195/1499361816789258334`,
+        url: '/1491976446623748195/1499361816789258334',
         method: 'post',
         data: {
           'kx_kq_product_collection': {
@@ -145,7 +145,7 @@ export default {
     },
     async getCostPlan (p, key) {
       const plans = await this.axios({
-        url: `/1491976446623748195/1500012770928758837`,
+        url: '/1491976446623748195/1500012770928758837',
         method: 'post',
         data: {
           kx_kq_product: {
@@ -207,7 +207,7 @@ export default {
         '自动搭赠': '954254203071631360'
       }
       await this.axios({
-        url: `/1491976446623748195/1494632923264061519`,
+        url: '/1491976446623748195/1494632923264061519',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -318,8 +318,6 @@ export default {
           ]
         }
       ]
-      // console.log(cost)
-      // this.costText = `<div>${cost.costtext}</div>`
       this.showPlanDetail = true
     }
   },
@@ -744,9 +742,9 @@ div
   background-color #fff
   .footer-btn
     border-radius 5px
-</style>
-<style>
 .van-sidebar-item--selected {
   border-color: rgba(22, 120, 255, 0.39);
 }
+</style>
+<style>
 </style>

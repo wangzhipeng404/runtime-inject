@@ -135,7 +135,7 @@ export default {
     },
     async getDMSConfig () {
       const { feeconfig } = await this.axios({
-        url: `/1491976446623748195/1511693060906553432`,
+        url: '/1491976446623748195/1511693060906553432',
         method: 'post',
         data: {
           ka_kq_channelcustomers: {
@@ -150,7 +150,7 @@ export default {
     },
     async getAddressList () {
       let list = await this.axios({
-        url: `/1108546657601065058/1128622639842201699`,
+        url: '/1108546657601065058/1128622639842201699',
         method: 'post',
         data: {
           ka_kq_channelcustomers: {
@@ -174,7 +174,7 @@ export default {
     },
     async getCacheData () {
       const { kx_order, kx_dms_order_detail } = await this.axios({
-        url: `/1491976446623748195/1486248650932883555`,
+        url: '/1491976446623748195/1486248650932883555',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -198,8 +198,8 @@ export default {
       this.orderDetail = kx_dms_order_detail.map(p => {
           const image = p.productimage ? JSON.parse(p.productimage) : []
           if (image.length > 0) {
-            const objectkey = `${image[0].source.slice(0, 3)}/img/${this.$dayjs(+image[0].datetime).format('YYYYMMDD')}/${this.tenantcode}/${image[0].source}`
-            p.imageUrl = `https://${this.ossConfig.storageurl}/${objectkey}`
+            const objectkey = image[0].source.slice(0, 3) + '/img/' + this.$dayjs(+image[0].datetime).format('YYYYMMDD') + '/' + this.tenantcode + '/' + image[0].source;
+            p.imageUrl = 'https://' + this.ossConfig.storageurl + '/' + objectkey
           }
           return p
       })
@@ -211,7 +211,7 @@ export default {
     },
     async getData () {
       const { kx_order, kx_dms_order_detail } = await this.axios({
-        url: `/1491976446623748195/1500664228380545075`,
+        url: '/1491976446623748195/1500664228380545075',
         method: 'post',
         data: {
           'kx_return_order': {
@@ -294,7 +294,7 @@ export default {
         }
       }
       await this.axios({
-        url: `/1491976446623748195/1493824241152430174`,
+        url: '/1491976446623748195/1493824241152430174',
         method: 'post',
         data: {
             kx_order: {
@@ -302,7 +302,7 @@ export default {
               status,
               create_object: '1',
               ordersourceid: '3',
-              expectedtime: this.orderInfo.expectedtime ? `${this.orderInfo.expectedtime.getTime()}` : '',
+              expectedtime: this.orderInfo.expectedtime ? '' + this.orderInfo.expectedtime.getTime() : '',
               customercode: this.channelcode,
               salesmanid: this.salesmanid
             },
@@ -313,13 +313,10 @@ export default {
         const data = res.data.resp_data
         return data
       })
-      // mpx.redirectTo({
-      //   url: '/packageDMS/pages/order/list/list'
-      // })
     },
     async getCashaccount () {
       const obj = await this.axios({
-        url: `/1491976446623748195/1501496324988735583`,
+        url: '/1491976446623748195/1501496324988735583',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -334,7 +331,7 @@ export default {
     },
     async bindDeliverWay () {
       const list = await this.axios({
-        url: `/100000000000000001/100000000001100001`,
+        url: '/100000000000000001/100000000001100001',
         method: 'post',
         data: {
           pl_dictionary: {
@@ -355,7 +352,7 @@ export default {
     },
     async bindCarType () {
       const list = await this.axios({
-        url: `/1501475108701737027/1501475108701737026`,
+        url: '/1501475108701737027/1501475108701737026',
         method: 'post',
         data: {
           'kx_car_model': {
@@ -387,27 +384,14 @@ export default {
       this.showDatetime = !this.showDatetime
     },
     toCost () {
-      // mpx.navigateTo({
-      //   url: `./cost?orderid=${this.query.orderid || ''}&amount=${this.orderInfo.finalamount || '0'}`
-      // })
     },
     toCargo () {
-      // mpx.navigateTo({
-      //   url: `./cargo?orderid=${this.query.orderid || ''}&amount=${this.orderInfo.finalamount || '0'}`
-      // })
     },
     toogleAddressList () {
       if (this.disabled) return
-      // this.showAddressList = !this.showAddressList
       this.isChooseAddres = true
-      // mpx.navigateTo({
-      //   url: `/packageDMS/pages/order/detail/address`
-      // })
     },
     toEdit () {
-      // mpx.navigateTo({
-      //   url: `/packageDMS/pages/cart/cart?mode=edit&orderid=${this.query.orderid || ''}`
-      // })
     },
     onSelectAddress (e) {
       this.orderInfo.receiver = e.detail.receiver

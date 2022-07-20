@@ -80,6 +80,16 @@ export default {
     // const { options } = pages.pop()
     // this.query = options
     this.getData()
+    this.$require(['./OSS/oss.js']).then(() => {
+      window.__baseUrl = 'http://localhost:8080'
+      console.log(window)
+      window.OSS(this, this.ossConfig, '1011141', false ).then(oss => {
+        console.log(oss)
+        oss.getToken().then(res => {
+          console.log(res)
+        })
+      })
+    })
   },
   methods: {
     onPullDownRefresh () {
@@ -97,7 +107,7 @@ export default {
       // this.checkedList = []
       // this.productIds = []
       const res = await this.axios({
-        url: `/1491976446623748195/1495666677306757214`,
+        url: '/1491976446623748195/1495666677306757214',
         method: 'post',
         data: {
           'kx_order_shoppingcart': {
@@ -115,17 +125,17 @@ export default {
       let list = res.kx_order_shoppingcart.map((c, ci) => {
         c.productarr = c.productarr.map((p, pi) => {
           if (p.saletype != '954254203071631360') {
-            productIds.push(`${ci}-${pi}`)
+            productIds.push(ci + '-' + pi)
           }
           if (p.ischecked === '1') {
-            checkedIds.push(`${ci}-${pi}`)
+            checkedIds.push(ci + '-' + pi)
             console.log(count, p.batchcount)
             count += Number(p.batchcount)
           }
           const image = p.image ? JSON.parse(p.image) : []
          if (image.length > 0) {
-          const objectkey = `${image[0].source.slice(0, 3)}/img/${this.$dayjs(+image[0].datetime).format('YYYYMMDD')}/${this.tenantcode}/${image[0].source}`
-          p.imageUrl = `https://${this.ossConfig.storageurl}/${objectkey}`
+          const objectkey = image[0].source.slice(0, 3) + '/img/' + this.$dayjs(+image[0].datetime).format('YYYYMMDD') + '/' + this.tenantcode + '/' + image[0].source;
+          p.imageUrl = 'https://' + this.ossConfig.storageurl + '/' + objectkey
         }
           return p
         })
@@ -140,7 +150,7 @@ export default {
     },
     async updateCart (products) {
       await this.axios({
-        url: `/1491976446623748195/1494632923264061519`,
+        url: '/1491976446623748195/1494632923264061519',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -181,7 +191,7 @@ export default {
       const changed = [...adds, ...subs]
       if (changed.length == 0) return;
       await this.axios({
-        url: `/1491976446623748195/1512628814021267555`,
+        url: '/1491976446623748195/1512628814021267555',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -238,7 +248,7 @@ export default {
           productid: product.id,
           costid: costid,
           ruleid: product.ruleid,
-          batchcount: `${val > 0 ? val : 1}`,
+          batchcount: val > 0 ? '' + val : '1',
           saletype: product.saletype
         }])
       }, 1000)
@@ -299,7 +309,7 @@ export default {
         return
       }
       await this.axios({
-        url: `/1491976446623748195/1512027390421897310`,
+        url: '/1491976446623748195/1512027390421897310',
         method: 'post',
         data: {
           'kx_order': {
@@ -313,17 +323,13 @@ export default {
         return data
       })
       if (this.query.mode === 'edit') {
-        // mpx.navigateBack()
+        this.$xpe.emit('goback')
       } else {
-        // mpx.navigateTo({
-        //   url: `/packageDMS/pages/order/detail/detail?orderid=${this.query.orderid || ''}`
-        // })
+        this.$xpe.emit('toDetail')
       }
     },
     toMall () {
-      // mpx.navigateTo({
-      //   url: `/packageDMS/pages/mall/mall?mode=${this.query.mode || 'edit'}&orderid=${this.query.orderid || ''}`
-      // })
+      this.$xpe.emit('toMall', { orderid: this.orderid, mode: 'edit', channelcode: this.channelcode})
     },
     toMallBar () {
       if (this.query.mode === 'edit') {
