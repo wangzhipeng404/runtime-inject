@@ -229,9 +229,12 @@ function OSSCreater (context, config ) {
               oss.getCloudConfig(bucket).then((client) => {
                 let url = ''
                 if (bucket.provider === 'aliyun') {
-                  url = client.signatureUrl(objectkey, {
+                  url = client.signatureUrl(isProd ? `${bucket.storagebucket}/${objectkey}` : objectkey, {
                     process: process
                   })
+                  if (isProd) {
+                    url = url.replace(bucket.storagebucket + '.', '')
+                  }
                 } else {
                   const Params = {
                     Bucket: bucket.storagebucket,
@@ -245,7 +248,7 @@ function OSSCreater (context, config ) {
                   url = client.createSignedUrlSync(Params).SignedUrl
                 }
                 console.log(url)
-                url = url.replace('http://', 'https://')
+                url = isProd ? url : url.replace('http://', 'https://')
                 resolve(url)
               })
             }
