@@ -14,7 +14,7 @@
     "lib:displayReport": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-report --name DisplayReport ./packages/display-report/index.vue",
     "lib:displayStatistics": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/display-statistics --name DisplayStatistics ./packages/display-statistics/index.vue",
     "lib:aiappeal": "vue-cli-service build --target lib --formats umd-min --dest dist/h5-components/ai-appeal --name AIAppeal ./packages/ai-appeal/Appeal.vue",
-    "lib:swiper": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xswiper --name xswiper.v1.0.0  ./packages/swiper/swiper.vue",
+    "lib:swiper": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xswiper --name xswiper.v2.0.0  ./packages/swiper/swiper.vue",
     "lib:messageNotice": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xmessageNotice --name xmessageNotice.v1.0.0  ./packages/messageNotice/messageNotice.vue",
     "lib:navigationIcon": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xnavigationIcon --name xnavigationIcon.v1.0.0  ./packages/navigationIcon/navigationIcon.vue",
     "lib:targetProgress": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xtargetProgress --name xtargetProgress.v1.0.0  ./packages/targetProgress/targetProgress.vue",
@@ -31,6 +31,7 @@
     "dayjs": "^1.10.7",
     "echarts": "^5.2.2",
     "less": "^4.1.2",
+    "stylus": "^0.58.1",
     "vant": "^2.12.30",
     "vconsole": "^3.9.4",
     "vue": "^2.6.11",
@@ -45,6 +46,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "less-loader": "^5.0.0",
+    "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

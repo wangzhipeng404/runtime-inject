@@ -32,65 +32,48 @@ export default {
   mounted() {
     this.tenantcode = this.$cache.get("tenantcode");
     this.ossConfig = this.$cache.get("ossConfig");
-    this.getDate();
+    this.oss = this.$cache.get('oss')
+    console.log('swiper', this.oss)
+    this.getData();
   },
   methods: {
-    getDate() {
+    async getData() {
       let that = this;
-      this.axios.post(this.queryurl).then((res) => {
-        // console.log(res);
-        // res.data.resp_data.kx_template = []
-        if (res.data.resp_data.kx_template.length) {
-          this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
-            return {
-              url: i.url,
-              img: this.createImgUrl(i.image)
-            };
-          });
-        } else {
-          // console.log("111111");
-          // console.log(that.emptyUrl);
-          this.imagesinfo = [
-            {
-              url: "",
-              img: that.emptyUrl,
-            },
-          ];
+      const res = await this.axios.post(this.queryurl)
+      if (res.data.resp_data.kx_template.length) {
+        const list = []
+        for (let i = 0; i < res.data.resp_data.kx_template.length; i++) {
+          const imgUrl = await this.createImgUrl(res.data.resp_data.kx_template[i].image)
+          list.push({
+            url: res.data.resp_data.kx_template[i].url,
+            img: imgUrl
+          })
         }
-      });
-      // console.log(this.imagesinfo);
+        this.imagesinfo = list
+      } else {
+        this.imagesinfo = [
+          {
+            url: "",
+            img: that.emptyUrl,
+          },
+        ];
+      }
     },
     // 兼容链接形式
-    createImgUrl (photoValue) {
+    async createImgUrl (photoValue) {
       let img = JSON.parse(photoValue)
       // img = []
       let imgUrl = this.emptyUrl
       if (img && img.length) {
         img = img[0]
         if (typeof img === 'object') {
-          let date = this.$dayjs(+img.datetime).format('YYYYMMDD')
-          imgUrl = `http://${this.ossConfig.storageurl}/${img.source.substring(0,3)}/img/${date}/${this.tenantcode}/${img.source}`
+          imgUrl = await this.oss.getUrl('img', img)
         } else if (typeof img === 'string') {
           imgUrl = img
         }
       }
       return imgUrl
     },
-    // getDate() {
-    //   this.axios.post(this.queryurl).then((res) => {
-    //     this.images = res.data.resp_data.kx_template
-    //       .map((i) => JSON.parse(i.image)[0])
-    //       .map(
-    //         (u) =>
-    //           "http://xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com/" +
-    //           u.source.substring(0, 3) +
-    //           "/img/" +
-    //           this.$dayjs(+u.datetime).format("YYYYMMDD") +
-    //           "/1000060/" +
-    //           u.source
-    //       );
-    //   });
-    // },
     link(url) {
       console.log(url);
       this.$xpe.run("jump", { url: url });
