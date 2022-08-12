@@ -5,7 +5,7 @@ const Comp = () => import(process.env.VUE_APP_COMPONENT)
 
 new Vue({
   created () {
-    this.axios.defaults.baseURL = '/api/teapi/dy-biz'
+    // this.axios.defaults.baseURL = '/api/teapi/dy-biz'
     this.axios.interceptors.request.use((config) => {
       config.headers.token = localStorage.getItem('token')
       return config

@@ -89,7 +89,7 @@ new Vue({
   },
   mounted () {
     this.$xpe.getBaseUrl().then(url => {
-      this.axios.defaults.baseURL = url + '/api/teapi/dy-biz'
+      this.axios.defaults.baseURL = url
       this.axios.interceptors.request.use((config) => {
         config.headers.token = localStorage.getItem('token')
         return config
