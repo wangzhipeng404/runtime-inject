@@ -20,6 +20,7 @@ export default {
       tenantcode: "",
       url: "",
       ossConfig: {},
+      oss: '',
       emptyUrl: require("../../src/assets/empty.png"),
       queryurl: '',
       info: {}
@@ -39,6 +40,8 @@ export default {
   mounted() {
     this.tenantcode = this.$cache.get("tenantcode");
     this.ossConfig = this.$cache.get("ossConfig");
+    this.oss = this.$cache.get('oss')
+    console.log('swiper', this.oss)
     // this.tenantcode = '1008972';
     // this.ossConfig = {
     //   provider: "aliyun",
@@ -61,26 +64,49 @@ export default {
       this.info = {...this.protocol}
       this.getData()
     },
-    getData() {
+    // getData() {
+    //   let that = this;
+    //   this.axios.post(this.queryurl,{ clienttypecode: '2' }).then((res) => {
+    //     if (res.data.resp_data.kx_template.length) {
+    //       this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
+    //         return {
+    //           url: i.url,
+    //           img: this.createImgUrl(i.image)
+    //         };
+    //       });
+    //     } else {
+    //       this.imagesinfo = [
+    //         {
+    //           url: "",
+    //           img: that.emptyUrl,
+    //         },
+    //       ];
+    //     }
+    //   });
+    // },
+    async getData() {
       let that = this;
-      this.axios.post(this.queryurl,{ clienttypecode: '2' }).then((res) => {
-        if (res.data.resp_data.kx_template.length) {
-          this.imagesinfo = res.data.resp_data.kx_template.map((i) => {
-            return {
-              url: i.url,
-              img: this.createImgUrl(i.image)
-            };
-          });
-        } else {
-          this.imagesinfo = [
-            {
-              url: "",
-              img: that.emptyUrl,
-            },
-          ];
+      const res = await this.axios.post(this.queryurl,{ clienttypecode: '2' })
+      if (res.data.resp_data.kx_template.length) {
+        const list = []
+        for (let i = 0; i < res.data.resp_data.kx_template.length; i++) {
+          const imgUrl = await this.createImgUrl(res.data.resp_data.kx_template[i].image)
+          list.push({
+            url: res.data.resp_data.kx_template[i].url,
+            img: imgUrl
+          })
         }
-      });
+        this.imagesinfo = list
+      } else {
+        this.imagesinfo = [
+          {
+            url: "",
+            img: that.emptyUrl,
+          },
+        ];
+      }
     },
+
     // 兼容链接形式
     createImgUrl (photoValue) {
       let img = JSON.parse(photoValue)
@@ -89,8 +115,7 @@ export default {
       if (img && img.length) {
         img = img[0]
         if (typeof img === 'object') {
-          let date = this.$dayjs(+img.datetime).format('YYYYMMDD')
-          imgUrl = `http://${this.ossConfig.storageurl}/${img.source.substring(0,3)}/img/${date}/${this.tenantcode}/${img.source}`
+          imgUrl = await this.oss.getUrl('img', img)
         } else if (typeof img === 'string') {
           imgUrl = img
         }
