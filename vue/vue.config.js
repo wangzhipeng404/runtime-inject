@@ -9,7 +9,7 @@ module.exports = {
     contentBase: ['public', 'dist'],
     proxy: {
       '/api': {
-        target: 'http://120.24.27.225:7000/',
+        target: 'http://101.200.205.231:7000/',
         ws: true,
         changeOrigin: true
       },

@@ -88,7 +88,24 @@ new Vue({
     this.$xpe.emit('created')
   },
   mounted () {
-    this.$xpe.emit('ready')
+    this.$xpe.getBaseUrl().then(url => {
+      this.axios.defaults.baseURL = url + '/api/teapi/dy-biz'
+      this.axios.interceptors.request.use((config) => {
+        config.headers.token = localStorage.getItem('token')
+        return config
+      })
+      this.axios.interceptors.response.use((response) => {
+        return response.data.resp_data;
+      }, (error) => {
+        const data = error.response.data
+        this.$dialog.alert({
+          title: '提示信息',
+          message: data.error_code
+        })
+        return Promise.reject(error);
+      });
+      this.$xpe.emit('ready')
+    })
   },
   render () {
     const Component = this.component

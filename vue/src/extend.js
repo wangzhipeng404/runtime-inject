@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import * as echarts from 'echarts';
 import myRequire from './utils/require'
 import xpe from './utils/xpe'
+import OSSCreater from './utils/OSS/oss'
 
 Vue.prototype.$echarts = echarts
 Vue.use(Vant);
@@ -18,5 +19,6 @@ Vue.prototype.$imagePreview = ImagePreview
 Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs
 Vue.prototype.$cache = new Map()
+Vue.prototype.$OSS = OSSCreater()
 
 export default Vue

@@ -20,22 +20,23 @@ export default {
       dim1: [],
       dim2: [],
       costPlans: [],
-      channelcode: '',
+      channelcode: 'JXS0000000830',
       currentProduct: null,
       query: {
-        mode: 'add'
+        orderid: '',
+        mode: ''
       },
       checkedPlan: [],
       authconfig: 0,
       costText: '',
       beforePlanDialogClose () {},
       tenantcode: '1000060',
-      ossConfig: {
-        provider: "aliyun",
-        storagebucket: "xtionai-storage-test",
-        storageendpoint: "oss-cn-shenzhen.aliyuncs.com",
-        storageurl: "xtionai-storage-test.oss-cn-shenzhen.aliyuncs.com"
-      }
+      count: 0
+    }
+  },
+  watch: {
+    selectedDim1 () {
+      this.getData()
     }
   },
   computed: {
@@ -43,11 +44,6 @@ export default {
   beforeCreate () {
   },
   created () {
-    this.axios.defaults.headers.common["token"] = ' eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTc2MTY4NzEsIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTA5MDgyNDk1MjE0MjkyOTkyIiwiYWNjb3VudENvZGUiOiIxNTA5MDgyNDk0NzM2MTQyMzM2IiwidGVuYW50Q29kZSI6IjEwMDAwNjAiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MCIsImNsaWVudFR5cGVDb2RlIjo2LCJ0b2tlbklkIjoiMGQwNzkxNWYtZDE3MC00ZWM4LWE4NjctYzAxMjg2N2E2NDk3Iiwib3JnQ29kZSI6IjkyODAxNDg5MzUiLCJ1c2VySW5mb0lkIjoiMTUwOTA4MjQ4OTcxMTM2NjE0NCIsInVzZXJJbmZvTmFtZSI6IuaWh-S7tiIsInBvc2l0aW9uQ29kZSI6IjE1MDkxMzQ4NDAxOTUzMjE4NTYiLCJwb3NpdGlvbk5hbWUiOiJETVPlhajmnYPpmZAt5rWL6K-VIiwibWVtYmVyQ29kZSI6IjE1MTAwODUzNTE0OTI5NDc5NjgiLCJyZWZQb3NpdGlvbkNvZGUiOiIxNDk2MzE2OTk4MzQ5NjIzMjk2IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMiIsInVzZXJOYW1lIjoiMTM2NTA4MTkzMzQiLCJ1c2VyTmFtZTEiOiIxMzY1MDgxOTMzNCIsInVzZXJOYW1lMiI6bnVsbCwidXNlck5hbWUzIjpudWxsLCJ0ZW5hbnROYW1lIjoi5pm65oWnMTAwVjYuMC1iYXNl5Lqn5ZOB56ef5oi3IiwiYXBwQ29kZSI6ImRpc3RyaWJ1dGlvbiIsImFwcENvZGVzIjpbInNhbGVzIiwicHJvbW90aW9uIiwiZGlzdHJpYnV0aW9uIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMi45MjgwMTQ4OTM1LiIsImlzbGVhZm9yZyI6InRydWUiLCJtZXRhbW9kZWx0eXBlIjoxLCJpc1Ntc0xvZ2luIjpmYWxzZX19.rsGghKQwnL4CYXuO9av2H8KK607sg6Niqv8XuJmwjqM';
-    this.axios.defaults.baseURL = "/api/teapi/dy-biz";
-    // const user = localStorage.getItem('distributionData')
-    this.channelcode = 'QD0000000593'
-    this.query = {}
     this.beforePlanDialogClose = (action, done) => {
       if (action === 'confirm' && this.checkedPlan.length === 0) {
         this.$toast({
@@ -57,10 +53,28 @@ export default {
       }
       done(true)
     }
-    this.fetchDim()
-    this.getData()
+  },
+  mounted () {
+    this.init()
+    this.$xpe.on('refresh', () => {
+      this.init()
+    })
+    this.$xpe.on('setFilter', (data) => {
+      this.productName = data.code || data.productname
+      this.activeKey = -1
+      this.getData()
+    })
   },
   methods: {
+    baseUrlCallback (success, errMsg, baseUrl) {
+      window.__baseUrl = baseUrl
+      this.axios.defaults.baseURL = baseUrl + '/api/teapi/dy-biz'
+      this.init()
+    },
+    init () {
+      this.fetchDim()
+      this.getData()
+    },
     onPullDownRefresh () {
       this.fetchDim()
       this.getData()
@@ -69,14 +83,30 @@ export default {
       this.fetchDim()
       this.getData()
     },
+    async getCartData () {
+      const res = await this.axios({
+        url: '/1491976446623748195/1495666677306757214',
+        method: 'post',
+        data: {
+          'kx_order_shoppingcart': {
+            'customercode': this.channelcode,
+            'orderid': this.query.orderid || ''
+          }
+        }
+      })
+      let count = 0
+      res.kx_order_shoppingcart.map((c) => {
+        c.productarr = c.productarr.map(() => {
+          count++
+        })
+      })
+      this.count = count
+    },
     async fetchDim () {
       const { dimonsionname, dimone, dimtwo } = await this.axios({
         url: '/1491976446623748195/1494632923264061530',
         method: 'post',
         data: {}
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.dimNames = dimonsionname
       this.dim1 = dimone
@@ -84,6 +114,7 @@ export default {
     },
     async getData () {
       this.loading = true
+      this.getCartData()
       console.log(this.activeKey)
       const { kx_kq_product, authconfig } = await this.axios({
         url: '/1491976446623748195/1496043096784375824',
@@ -94,7 +125,7 @@ export default {
             'productcode': '',
             'productname': this.productName,
             'dimone': this.selectedDim1.length > 0 ? JSON.stringify(this.selectedDim1) : '',
-            'dimtwo': +this.activeKey > 0 && this.activeKey !== '9999' ? this.dim2[this.activeKey - 1].dickey : ''
+            'dimtwo': +this.activeKey > 0 ? this.dim2[this.activeKey - 1].dickey : ''
           },
           ka_kq_channelcustomers: {
             'channelcode': this.channelcode,
@@ -102,21 +133,21 @@ export default {
           },
           __paging: { __pageindex: '0', __pagesize: '9999' }
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.authconfig = authconfig.authconfig
-      this.list = kx_kq_product.map(p => {
-        const image = p.productimage ? JSON.parse(p.productimage) : []
-        if (image.length > 0) {
-          const objectkey = image[0].source.slice(0, 3) + '/img/' + this.$dayjs(+image[0].datetime).format('YYYYMMDD') + '/' + this.tenantcode + '/' + image[0].source;
-          p.imageUrl = 'https://' + this.ossConfig.storageurl + '/' + objectkey
-        }
-        return {
+      this.list = kx_kq_product.map((p, i) => {
+        const np = {
           ...p,
           costlabel: p.costlabel ? JSON.parse(p.costlabel) : []
         }
+        const image = p.productimage ? JSON.parse(p.productimage) : []
+        if (image.length > 0) {
+          this.$OSS.getUrl('img', image[0]).then(url => {
+            np.imageUrl = url
+            this.list.splice(i, 1, np)
+          })
+        }
+        return np
       })
       this.loading = false
     },
@@ -133,9 +164,6 @@ export default {
             'productid': p.id
           }
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.$toast({
         message: p.iscollection === '1' ? '取消成功' : '收藏成功',
@@ -155,7 +183,7 @@ export default {
           }
         }
       }).then(res => {
-        const data = res.data.resp_data.tn_kx_cost_takegift_policy
+        const data = res.tn_kx_cost_takegift_policy
         return data
       })
       const costsMap = {}
@@ -171,7 +199,7 @@ export default {
       })
       this.costPlans = costs.map((c) => {
         c.rules = plans.filter(p => p.costid === c.costid).map((p) => {
-          const descArr = p.describution.split('\n')
+          const descArr = p.describution.split('\\n')
           const arr = descArr.map(d => {
             var l = d.split(':')
             return {
@@ -232,9 +260,6 @@ export default {
             saletype: saletypeOptions['基本销售']
           }]
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.$toast({
         message: '添加成功',
@@ -325,31 +350,10 @@ export default {
     return (
       <div class='mall-container'>
         <div class="filter-wrap">
-          <van-search
-            value={this.productName}
-            placeholder="产品编码/名称"
-            input-align="center"
-            on-search={this.onSearch}
-            on-blur={this.onBlur}
-            use-left-icon-slot
-            use-right-icon-slot
-            field-class="search-feild"
-            clearable={false}
-          >
-            <van-icon name={this.searchIcon} size="22px" slot="left-icon" />
-            {this.productname && (
-              <van-icon
-                name="cross"
-                slot="right-icon"
-                on-click={this.clearSearch}
-              />
-            )}
-          </van-search>
-          <div>
+          <div style="overflow-x: auto;">
             <van-checkbox-group
-              value={this.selectedDim1}
+              v-model={this.selectedDim1}
               direction="horizontal"
-              change={this.dim1Change}
             >
               <div class="brand-wrap">
                 <div class="label">{this.dimNames.dimone}：</div>
@@ -461,8 +465,8 @@ export default {
             ))}
           </div>
         </div>
-        <div class="cart-box">
-          <van-icon size="30px" name={this.cartIcon} badge={5} />
+        <div class="cart-box" on-click={() => this.$xpe.emit(this.query.mode == 'edit' ? 'goback' : 'toCart')}>
+          <van-icon size="30px" name={this.cartIcon} badge={this.count} />
         </div>
         <van-dialog
           use-slot
@@ -545,7 +549,7 @@ export default {
                           {desc.value.map(text => (
                             <div key={text}>{text};</div>
                           ))}
-                          </div>v
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -598,12 +602,12 @@ div
     height 100vh
   .edit
     height 100vh
-    padding-bottom calc(60px + constant(safe-area-inset-bottom))
-    padding-bottom calc(60px + env(safe-area-inset-bottom))
+    padding-bottom calc(0px + constant(safe-area-inset-bottom))
+    padding-bottom calc(0px + env(safe-area-inset-bottom))
   .content
     box-sizing border-box
     display flex
-    padding-top 115px
+    padding-top 55px
     .left
       height 100%
       padding-bottom 120px
@@ -742,9 +746,8 @@ div
   background-color #fff
   .footer-btn
     border-radius 5px
-.van-sidebar-item--selected {
-  border-color: rgba(22, 120, 255, 0.39);
-}
+.van-sidebar-item--selected
+  border-color rgba(22, 120, 255, 0.39)
 </style>
 <style>
 </style>
