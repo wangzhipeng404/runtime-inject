@@ -1,6 +1,6 @@
 <template>
   <div class="icon-area">
-    <div class="item" v-for="(value, index) in info" :key="index">
+    <div class="item" v-for="(value, index) in iconinfo" :key="index">
       <div class="icon" @click="link(value.url)">
         <van-image width="44px" height="44px" fit="cover" :src="value.imgurl" />
       </div>
@@ -16,11 +16,12 @@ export default {
   data() {
     return {
       //从协议中获取
-      info: []
+      iconinfo: [],
+      info:{}
     };
   },
   props: {
-    value: {
+    protocol: {
       type: Array,
       default: () => [],
     },
@@ -30,7 +31,7 @@ export default {
     this.init();
   },
   watch: {
-    value(newvalue) {
+    protocol(newvalue) {
       this.images = newvalue;
       this.init();
     },
@@ -48,7 +49,8 @@ export default {
     //   })
     // }
     init() {
-      this.info = this.value.map((i) => {
+      this.info = {...this.protocol}
+      this.iconinfo = this.info.value.map((i) => {
         console.log(i)
         return {
           ...i,
@@ -66,7 +68,7 @@ export default {
       });
     },
     link(url) {
-      this.$xpe.run("jump", { url: url });
+      this.$xpe.run("jump",  url );
     },
   },
 };

@@ -1,9 +1,12 @@
 <template>
   <div class="progressContainer">
-    <div class="title">{{title}}</div>
+    <div class="top">
+      <span class="title">{{ info.title }}</span>
+      <img src="../../src/assets/arrow_right.png"  @click="link(info.url)" v-if="info.url"/>
+    </div>
     <div class="progress" v-for="(item, index) in progress" :key="index">
       <div class="top">
-        <div class="subtitle">{{ item.tltle }}</div>
+        <div class="subtitle">{{ item.title }}</div>
         <div class="number">{{ item.complete }}/{{ item.target }}</div>
       </div>
       <div class="bottom">
@@ -15,6 +18,9 @@
         />
       </div>
     </div>
+    <div v-if="progress.length === 0" style="width:100%;display:flex;justify-content:center;align-item:center">
+      <img src="../../src/assets/none.png" alt="" style="width:150px;">
+    </div>
   </div>
 </template>
 
@@ -24,25 +30,39 @@ export default {
     return {
       progress: [],
       url: "",
-      progresscolor:''
+      progresscolor:'',
+      queryurl:'',
+      info:{}
     };
   },
   props: {
-    queryurl: {
-      type: String,
-      default: "",
-    },
-    title: {
-      type: String,
-      default: "",
-    },
+    protocol:{},
+  },
+  watch:{
+    protocol(){
+      this.init()
+    }
   },
   created(){
-    console.log(this.queryurl);
   },
   methods: {
+    link(url) {
+      this.$xpe.run("jump", url );
+    },
+    init() {
+      console.log('progressinit')
+      if(this.protocol.bind && this.protocol.bind.logiccode){
+        this.queryurl = this.protocol.bind.logiccode
+        console.log(this.queryurl)
+      } else if (this.protocol.queryurl){
+        this.queryurl = this.protocol.queryurl
+        console.log(this.queryurl)
+      }
+      this.info = {...this.protocol}
+      this.getData()
+    },
     getData() {
-      this.axios.post(this.queryurl).then((res) => {
+      this.axios.post(this.queryurl,{ clienttypecode: '2' }).then((res) => {
         let data = res.data.resp_data.kx_template;
         data.forEach((i) => {
           i.percentage = (i.complete / i.target) * 100 > 100 ? '100' : (i.complete / i.target) * 100;
@@ -62,7 +82,7 @@ export default {
     },
   },
   mounted() {
-    this.getData();
+    this.init();
   },
   computed: {},
 };
@@ -77,13 +97,28 @@ export default {
   background-color: #fff;
   margin-bottom: 12px;
   border-radius: 10px;
-  .title {
-    font-size: 16px;
-    font-family: PingFang SC-Bold, PingFang SC;
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 16px;
+  .top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    .title {
+      font-size: 16px;
+      font-family: PingFang SC-Bold, PingFang SC;
+      font-weight: bold;
+      color: #333333;
+    }
+    img{
+      width: 22px;
+      height: 22px;
+    }
   }
+  // .title {
+  //   font-size: 16px;
+  //   font-family: PingFang SC-Bold, PingFang SC;
+  //   font-weight: bold;
+  //   color: #333333;
+  //   margin-bottom: 16px;
+  // }
   .progress {
     margin-bottom: 16px;
     .top {

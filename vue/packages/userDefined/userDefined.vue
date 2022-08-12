@@ -1,8 +1,8 @@
 <template>
   <div class="userDefined">
     <div class="top">
-      <span class="title">{{ title }}</span>
-      <img src="../../src/assets/arrow_right.png" @click="link" />
+      <span class="title">{{ info.title }}</span>
+      <img src="../../src/assets/arrow_right.png" @click="link(info.url)" v-if="info.url"/>
     </div>
     <div class="list">
       <table
@@ -11,24 +11,36 @@
       >
         <tr class="list-item">
           <td
-            class="item subtitle"
             v-for="(item, i) in col"
             :key="i"
-            :style="{ width: `${item.colwidth}px` }"
+            :style="{
+              width: `${item.colwidth}px`,
+              display:
+                !Object.keys(item).indexOf('isshow') || item.isshow === true
+                  ? 'table-cell'
+                  : 'none',
+            }"
           >
-            {{ item.title }}
+            <span class="item subtitle">{{ item.title }}</span>
           </td>
         </tr>
         <template v-for="(content, index) in content">
           <tr class="list-item" :key="index">
             <template v-for="(item, i) in col">
-              <td class="item content" :key="i">
+              <td
+                class="item content"
+                :key="i"
+                v-if="content[`column${i + 1}`] !== 'notShow'"
+              >
                 {{ content[`column${i + 1}`] }}
               </td>
             </template>
           </tr>
         </template>
       </table>
+      <div v-if="content.length === 0" style="width:100%;display:flex;justify-content:center;align-item:center">
+        <img src="../../src/assets/none.png" alt="" style="width:150px;">
+      </div>
     </div>
   </div>
 </template>
@@ -40,65 +52,112 @@ export default {
       content: () => [],
       widthTable: null,
       totalwidth: null,
-      screenX: null
+      screenX: null,
+      notShowIndex: [],
+      queryurl: "",
+      info: {},
+      col: [],
     };
   },
   props: {
-    col: {
-      type: Array,
-      default: () => [],
+    protocol: {
+      type: Object,
+      default: () => {},
     },
-    queryurl: {
-      type: String,
-      default: "",
-    },
-    title: {
-      type: String,
-      default: "",
-    },
-    url: {
-      type: String,
-      default: "",
-    },
-    jumptype: {
-      type: String,
-      default: "",
-    },
-    type: {
-      type: String,
-      default: "",
-    },
+    // col: {
+    //   type: Array,
+    //   default: () => [],
+    // },
+    // queryurl: {
+    //   type: String,
+    //   default: "",
+    // },
+    // title: {
+    //   type: String,
+    //   default: "",
+    // },
+    // url: {
+    //   type: String,
+    //   default: "",
+    // },
+    // jumptype: {
+    //   type: String,
+    //   default: "",
+    // },
+    // type: {
+    //   type: String,
+    //   default: "",
+    // },
   },
   created() {},
   mounted() {
-    this.col.map((item) => {
-      console.log(item);
-      if (item.colwidth) {
-        this.totalwidth += +item.colwidth;
-        this.screenX = document.body.clientWidth;
-      }
-    });
-    if (this.totalwidth < this.screenX) {
-      this.widthTable = this.screenX - 48;
-      console.log(this.col);
-      console.log(this.screenX);
-      console.log(this.widthTable);
-      console.log(this.totalwidth);
-      console.log(this.widthTable / this.totalwidth);
-      this.col.map((i) => (i.colwidth *= this.widthTable / this.totalwidth));
-      console.log("缩放列宽");
-      console.log(this.col);
-    } else {
-      this.widthTable = this.totalwidth;
-    }
-    this.axios.post(this.queryurl).then((res) => {
-      this.content = res.data.resp_data.kx_template;
-    });
+    this.init();
   },
   methods: {
-    link() {
+    init() {
+      this.info = { ...this.protocol };
+      this.info.col.forEach((i, index) => {
+        if (!Object.keys(i).indexOf("isshow") || i.isshow === true) {
+          console.log("show");
+        } else {
+          this.notShowIndex.push(index);
+        }
+      });
+      this.col = this.info.col;
+      console.log("this.notShowIndex", this.notShowIndex);
+      this.url = this.info.url;
+      if (this.protocol.bind && this.protocol.bind.logiccode) {
+        this.queryurl = this.protocol.bind.logiccode;
+      } else if (this.protocol.queryurl) {
+        this.queryurl = this.protocol.queryurl;
+      }
+      this.getData();
+      this.modifyScreen();
+    },
+    modifyScreen() {
+      this.col.map((item) => {
+        if (
+          item.colwidth &&
+          (!Object.keys(item).indexOf("isshow") || item.isshow === true)
+        ) {
+          // if (item.colwidth) {
+          this.totalwidth += +item.colwidth;
+          this.screenX = document.body.clientWidth;
+        }
+        this.$nextTick(() => {
+          if (this.totalwidth < this.screenX) {
+            this.widthTable = this.screenX - 48;
+            console.log(this.col);
+            console.log(this.screenX);
+            console.log(this.widthTable);
+            console.log(this.totalwidth);
+            console.log(this.widthTable / this.totalwidth);
+            this.col.map(
+              (i) => (i.colwidth *= this.widthTable / this.totalwidth)
+            );
+            console.log("缩放列宽");
+            console.log(this.col);
+          } else {
+            this.widthTable = this.totalwidth;
+          }
+        });
+      });
+    },
+    getData() {
+      this.axios.post(this.queryurl,{ clienttypecode: '2' }).then((res) => {
+        let content = res.data.resp_data.kx_template;
+        content.forEach((item) => {
+          for (let i = 0; i < this.notShowIndex.length; i++) {
+            item[`column${this.notShowIndex[i] + 1}`] = "notShow";
+          }
+        });
+        this.content = content;
+        // console.log('content',content)
+      });
+    },
+    link(url) {
       console.log("通用展示列跳转");
-      this.$xpe.run("jump", { url: this.url });
+      this.$xpe.run("jump", url )
     },
   },
 };
