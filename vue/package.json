@@ -19,7 +19,8 @@
     "lib:navigationIcon": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xnavigationIcon --name xnavigationIcon.v1.0.0  ./packages/navigationIcon/navigationIcon.vue",
     "lib:targetProgress": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xtargetProgress --name xtargetProgress.v1.0.0  ./packages/targetProgress/targetProgress.vue",
     "lib:userDefined": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xuserDefined --name xuserDefined.v1.0.0  ./packages/userDefined/userDefined.vue",
-    "lib:dataDisplay": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xdataDisplay --name xdataDisplay.v1.0.0  ./packages/dataDisplay/dataDisplay.vue"
+    "lib:dataDisplay": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xdataDisplay --name xdataDisplay.v1.0.0  ./packages/dataDisplay/dataDisplay.vue",
+    "lib:none": "vue-cli-service build --target lib  --formats umd-min --dest dist/h5-components/xnone --name xnone.v1.0.0  ./packages/none/none.vue"
   },
   "dependencies": {
     "@babel/standalone": "^7.15.8",

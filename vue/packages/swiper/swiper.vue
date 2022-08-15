@@ -20,7 +20,7 @@ export default {
       tenantcode: "",
       url: "",
       ossConfig: {},
-      oss: '',
+      // oss: '',
       emptyUrl: require("../../src/assets/empty.png"),
       queryurl: '',
       info: {}
