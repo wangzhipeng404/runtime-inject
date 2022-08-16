@@ -4,23 +4,27 @@ export default {
     return {
       mallEmpty: '/h5-assets/mall_empty.png',
       searchIcon: '/h5-assets/icon_search.png',
-      addIconDefault: '/h5-assets/icon_add_disabled.png',
-      addIconActive: '/h5-assets/icon_add.png',
+      addIconDefault: '/h5-assets/shopping_icon_add_default.png',
+      addIconActive: '/h5-assets/shopping_icon_add_active.png',
       starDefault: '/h5-assets/icon_star_normal.png',
       starActive: '/h5-assets/icon_star_selected.png',
       cartIcon: '/h5-assets/icon_cart.png',
+      arrowDownIcon: '/h5-assets/icon_arrow_down.png',
       loading: true,
       showCostPlan: false,
       showPlanDetail: false,
       activeKey: 0,
+      selectedRecomend: '',
       productName: '',
       list: [],
       dimNames: {},
-      selectedDim1: [],
+      selectedDim1: '',
+      showDimPopup: false,
       dim1: [],
       dim2: [],
+      recommends: [],
       costPlans: [],
-      channelcode: 'JXS0000000830',
+      channelcode: 'JXS0000000007',
       currentProduct: null,
       query: {
         orderid: '',
@@ -36,6 +40,9 @@ export default {
   },
   watch: {
     selectedDim1 () {
+      this.getData()
+    },
+    selectedRecomend () {
       this.getData()
     }
   },
@@ -66,26 +73,24 @@ export default {
     })
   },
   methods: {
-    baseUrlCallback (success, errMsg, baseUrl) {
-      window.__baseUrl = baseUrl
-      this.axios.defaults.baseURL = baseUrl + '/api/teapi/dy-biz'
-      this.init()
-    },
     init () {
       this.fetchDim()
       this.getData()
+      this.fetchRerecommend()
     },
     onPullDownRefresh () {
       this.fetchDim()
       this.getData()
+      this.fetchRerecommend()
     },
     pullDownRefresh () {
       this.fetchDim()
       this.getData()
+      this.fetchRerecommend()
     },
     async getCartData () {
       const res = await this.axios({
-        url: '/1491976446623748195/1495666677306757214',
+        url: '/api/teapi/dy-biz/1491976446623748195/1495666677306757214',
         method: 'post',
         data: {
           'kx_order_shoppingcart': {
@@ -102,9 +107,17 @@ export default {
       })
       this.count = count
     },
+    async fetchRerecommend () {
+      const { pl_mall_recommend_config: recommends } = await this.axios({
+        url: '/api/teapi/dy-biz/1557769523023712315/1558755299463139427',
+        method: 'post',
+        data: { pl_mall_recommend_config: { mall_type: '1' }}
+      })
+      this.recommends = recommends
+    },
     async fetchDim () {
       const { dimonsionname, dimone, dimtwo } = await this.axios({
-        url: '/1491976446623748195/1494632923264061530',
+        url: '/api/teapi/dy-biz/1491976446623748195/1494632923264061530',
         method: 'post',
         data: {}
       })
@@ -117,19 +130,22 @@ export default {
       this.getCartData()
       console.log(this.activeKey)
       const { kx_kq_product, authconfig } = await this.axios({
-        url: '/1491976446623748195/1496043096784375824',
+        url: '/api/teapi/dy-biz/1557769523023712315/1557769523023712314',
         method: 'post',
         data: {
           kx_kq_product: {
             'orderid': this.query.orderid,
-            'productcode': '',
             'productname': this.productName,
-            'dimone': this.selectedDim1.length > 0 ? JSON.stringify(this.selectedDim1) : '',
+            'dimone': this.selectedDim1 ? JSON.stringify([this.selectedDim1] ): '',
             'dimtwo': +this.activeKey > 0 ? this.dim2[this.activeKey - 1].dickey : ''
           },
           ka_kq_channelcustomers: {
             'channelcode': this.channelcode,
             'iscollection': +this.activeKey === 0 ? '1' : ''
+          },
+          pl_mall_recommend_config: {
+            mall_type: '1',
+            dimension: this.selectedRecomend
           },
           __paging: { __pageindex: '0', __pagesize: '9999' }
         }
@@ -155,7 +171,7 @@ export default {
       if (this.collecting) return
       this.collecting = true
       await this.axios({
-        url: '/1491976446623748195/1499361816789258334',
+        url: '/api/teapi/dy-biz/1491976446623748195/1499361816789258334',
         method: 'post',
         data: {
           'kx_kq_product_collection': {
@@ -173,7 +189,7 @@ export default {
     },
     async getCostPlan (p, key) {
       const plans = await this.axios({
-        url: '/1491976446623748195/1500012770928758837',
+        url: '/api/teapi/dy-biz/1491976446623748195/1500012770928758837',
         method: 'post',
         data: {
           kx_kq_product: {
@@ -235,7 +251,7 @@ export default {
         '自动搭赠': '954254203071631360'
       }
       await this.axios({
-        url: '/1491976446623748195/1494632923264061519',
+        url: '/api/teapi/dy-biz/1491976446623748195/1494632923264061519',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -351,27 +367,30 @@ export default {
       <div class='mall-container'>
         <div class="filter-wrap">
           <div style="overflow-x: auto;">
-            <van-checkbox-group
-              v-model={this.selectedDim1}
-              direction="horizontal"
-            >
-              <div class="brand-wrap">
-                <div class="label">{this.dimNames.dimone}：</div>
-                <div class="checkbox-wrap">
-                {this.dim1.map((item) => (
-                  <van-checkbox
-                    key={item.dickey}
-                    shape="square"
-                    icon-size="17px"
-                    name={item.dickey}
-                    custom-class="brand-checkbox"
-                  >
-                    <span class="checkbox-text">{item.dicvalue}</span>
-                  </van-checkbox>
-                ))}
-                </div>
-              </div>
-            </van-checkbox-group>
+            <div class="brand-wrap">
+              <van-tag 
+                size="large"
+                class="recommend-tag"
+                plain={this.selectedRecomend != ''}
+                text-color={this.selectedRecomend == '' ? '#ffffff' : '#333'}
+                color={this.selectedRecomend == '' ? '#1989fa' : '#ffffff'}
+                on-click={() => this.selectedRecomend = ''}
+              >全部</van-tag>
+              {this.recommends.map(re => (
+                <van-tag
+                  size="large"
+                  key={re.id}
+                  round={false}
+                  class="recommend-tag"
+                  plain={this.selectedRecomend != re.id}
+                  text-color={this.selectedRecomend == re.id ? '#ffffff' : '#333'}
+                  color={this.selectedRecomend == re.id ? '#1989fa' : '#ffffff'}
+                  on-click={() => this.selectedRecomend = re.id}
+                >
+                  {re.dim_name}
+                </van-tag>
+              ))}
+            </div>
           </div>
         </div>
         <div class={['content', this.query.mode === 'edit' ? 'edit' : 'tab-bar']}>
@@ -398,6 +417,34 @@ export default {
             </van-sidebar>
           </div>
           <div class="right">
+            <div class="brand-wrap" id="dim-wrap">
+              <van-tag
+                class="dim-tag"
+                size="middle"
+                round
+                text-color={this.selectedDim1 == '' ? '#1A85FF' : '#606266'}
+                color={this.selectedDim1 == '' ? '#E7F3FF' : '#F2F3F5'}
+                on-click={() => this.selectedDim1 = ''}
+              >
+                全部
+              </van-tag>
+              {this.dim1.map((item) => (
+                <van-tag
+                  round
+                  size="middle"
+                  key={item.dickey}
+                  class="dim-tag"
+                  text-color={this.selectedDim1 == item.dickey ? '#1A85FF' : '#606266'}
+                  color={this.selectedDim1 == item.dickey ? '#E7F3FF' : '#F2F3F5'}
+                  on-click={() => this.selectedDim1 = item.dickey}
+                >
+                  {item.dicvalue}
+                </van-tag>
+              ))}
+              <div class="dim-arrow-wrap" on-click={() => this.showDimPopup = !this.showDimPopup}>
+                <van-icon name={this.arrowDownIcon} size="14px"/>
+              </div>
+            </div>
           {!this.loading && this.list.length === 0 && (
             <div class="empty-wrap" >
               <div class="empty-content">
@@ -442,7 +489,7 @@ export default {
                   </div>
                   <div class="item-activities">
                   {item.costlabel.map(cost => (
-                    <van-tag 
+                    <van-tag
                       key={cost.key}
                       class="ac-tag"
                       color="rgba(255, 244, 233, 0.39)"
@@ -468,6 +515,27 @@ export default {
         <div class="cart-box" on-click={() => this.$xpe.emit(this.query.mode == 'edit' ? 'goback' : 'toCart')}>
           <van-icon size="30px" name={this.cartIcon} badge={this.count} />
         </div>
+        <van-popup 
+          v-model={this.showDimPopup}
+          position="right"
+          class="dim-popup"
+          overlay-style={{ zIndex: 996 }}
+        >
+          <van-grid column-num={3} square={false} border={false}>
+          {this.dim1.map((item) => (
+            <van-grid-item key={item.dickey} class="dim-griditem">
+              <van-tag
+                class="dim-btn"
+                text-color={this.selectedDim1 == item.dickey ? '#1A85FF' : '#606266'}
+                color={this.selectedDim1 == item.dickey ? '#E7F3FF' : '#F2F3F5'}
+                on-click={() => this.selectedDim1 = item.dickey}
+              >
+                {item.dicvalue}
+              </van-tag>
+            </van-grid-item>
+          ))}
+          </van-grid>
+        </van-popup>
         <van-dialog
           use-slot
           use-title-slot
@@ -569,27 +637,35 @@ export default {
 <style lang='stylus'>
 div
   box-sizing border-box
+.van-sidebar-item--select::before
+  background-color #1A85FF
+  height 30px
+  width 4px
+  border-radius 2px
 .mall-container
   .filter-wrap
     position fixed
     top 0
     left 0
     width 100%
-    z-index 9
+    z-index 999
     background-color #fff
     .search-feild
       padding 4px 0
     .brand-wrap
       box-sizing border-box
+      white-space nowrap
       display flex
       flex-wrap nowrap
       align-items center
       overflow-x auto
       font-size 14px
-      padding 15px 12px 15px 12px
+      padding 15px 12px 15px 4px
       border-top 1px solid #f5f5f5
       border-bottom 1px solid #f5f5f5
       flex-shrink 0
+      .recommend-tag
+        margin-left 8px
       .checkbox-wrap
         flex 1
         display flex
@@ -609,6 +685,7 @@ div
     display flex
     padding-top 55px
     .left
+      z-index 998
       height 100%
       padding-bottom 120px
       background-color #f7f8fa
@@ -625,13 +702,32 @@ div
     .right
       flex 1
       height 100%
+      padding-top 50px
       overflow auto
       background-color #fff
+      .brand-wrap
+        z-index 997
+        white-space nowrap
+        top 56px
+        position fixed
+        width calc(100vw - 80px)
+        overflow hidden
+        padding 12px
+        background #fff
+        .dim-tag
+          margin-right 8px
+          padding 3px 12px
+        .dim-arrow-wrap
+          position absolute
+          top 0
+          right 0
+          padding 16px 10px
+          background #fff
       .empty-wrap
         display flex
         justify-content center
         text-align center
-        margin-top 80px
+        margin-top 160px
         .empty-text
           color #999999
           font-size 16px
@@ -690,6 +786,28 @@ div
             .item-uint
               font-size 14px
               color #999
+          .cart-btn
+            position relative
+            top 3px
+.dim-popup
+  z-index 996
+  top 97px
+  width calc(100vw - 80px)
+  -webkit-transform none
+  transform none
+  .van-grid
+    padding 16px 8px
+  .dim-griditem
+    width 33.33%
+    .van-grid-item__content
+      padding 4px 8px
+  .dim-btn
+    width 100%
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
+    padding 4px
+    justify-content center
 .cart-box
   box-sizing border-box
   position fixed
