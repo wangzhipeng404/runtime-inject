@@ -813,7 +813,7 @@ div
   position fixed
   left 18px
   bottom 46px
-  z-index 99
+  z-index 1999
   width 44px
   height 44px
   padding 7px
