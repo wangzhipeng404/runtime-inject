@@ -6,10 +6,12 @@ export default {
       searchIcon: '/h5-assets/icon_search.png',
       addIconDefault: '/h5-assets/shopping_icon_add_default.png',
       addIconActive: '/h5-assets/shopping_icon_add_active.png',
+      addIconSelected: '/h5-assets/icon_shoping_selected.png',
       starDefault: '/h5-assets/icon_star_normal.png',
       starActive: '/h5-assets/icon_star_selected.png',
       cartIcon: '/h5-assets/icon_cart.png',
       arrowDownIcon: '/h5-assets/icon_arrow_down.png',
+      imageEmpty: '/h5-assets/img_empty.png',
       loading: true,
       showCostPlan: false,
       showPlanDetail: false,
@@ -158,10 +160,12 @@ export default {
         }
         const image = p.productimage ? JSON.parse(p.productimage) : []
         if (image.length > 0) {
-          this.$OSS.getUrl('img', image[0]).then(url => {
+          this.$OSS.getUrl('img', image[0], { width: 90, height: 90 }).then(url => {
             np.imageUrl = url
             this.list.splice(i, 1, np)
           })
+        } else {
+          np.imageUrl = this.imageEmpty
         }
         return np
       })
@@ -363,6 +367,11 @@ export default {
     }
   },
   render () {
+    const cartIconMap = {
+      1: this.addIconDefault,
+      0: this.addIconActive,
+      2: this.addIconSelected
+    }
     return (
       <div class='mall-container'>
         <div class="filter-wrap">
@@ -457,6 +466,9 @@ export default {
               <div class="item-box" key={item.id}>
                 <div class="item-body">
                   <div class="item-left">
+                    {item.image_url && (
+                      <van-icon name={item.image_url} size="32px" class="image-icon" />
+                    )}
                     <van-image
                       width="90"
                       height="90"
@@ -503,7 +515,7 @@ export default {
                   </div>
                   <div class="cart-btn" on-click={() => this.choosePlan(item)}>
                     <van-icon
-                      name={item.ischoice == 1 ? this.addIconDefault : this.addIconActive }
+                      name={cartIconMap[item.ischoice]}
                       size="22"
                     />
                   </div>
@@ -738,7 +750,13 @@ div
           display flex
           padding-bottom 12px
           .item-left
+            position relative
             padding-right 8px
+            .image-icon
+              position absolute
+              top 0
+              left 0
+              z-index 9
           .item-right
             flex 1
             display flex

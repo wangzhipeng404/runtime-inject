@@ -11,6 +11,7 @@ export default {
       starDefault: '/h5-assets/icon_star_normal.png',
       starActive: '/h5-assets/icon_star_selected.png',
       cartIcon: '/h5-assets/icon_cart.png',
+      imageEmpty: '/h5-assets/img_empty_large.png',
       current: 0,
       checkedPlan: [],
       query: params,
@@ -227,7 +228,9 @@ export default {
           </van-swipe-item>
         ))}
         {this.imgs.length === 0 && (
-          <van-swipe-item></van-swipe-item>
+          <van-swipe-item>
+            <div class="swiper-img" style={{ backgroundImage: 'url(' + this.imageEmpty + ')' }}></div>
+          </van-swipe-item>
         )}
           <div class="custom-indicator" slot="indicator">{ this.current + 1 }/{this.imgs.length}</div>
         </van-swipe>
