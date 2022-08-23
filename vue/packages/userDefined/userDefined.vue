@@ -16,7 +16,7 @@
             :style="{
               width: `${item.colwidth}px`,
               display:
-                !Object.keys(item).indexOf('isshow') || item.isshow === true
+                Object.keys(item).indexOf('isshow') === -1 || item.isshow === true
                   ? 'table-cell'
                   : 'none',
             }"
@@ -119,7 +119,7 @@ export default {
       this.col.map((item) => {
         if (
           item.colwidth &&
-          (!Object.keys(item).indexOf("isshow") || item.isshow === true)
+          (Object.keys(item).indexOf("isshow") === -1 || item.isshow === true)
         ) {
           // if (item.colwidth) {
           this.totalwidth += +item.colwidth;
