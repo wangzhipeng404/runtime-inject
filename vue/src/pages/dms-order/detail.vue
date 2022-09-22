@@ -6,9 +6,11 @@ export default {
       arrowIcon: '/h5-assets/arrow_right@2x.png',
       addrIcon: '/h5-assets/default_address.png',
       loaded: false,
-      channelcode: 'QD0000000593',
+      channelcode: 'JXS0000000008',
       salesmanid: '1510085351492947968',
-      query: {},
+      query: {
+        orderid: '1570324570509021184'
+      },
       cashAccount: {},
       feeconfig: {
         cancelconfig: '0',
@@ -74,7 +76,11 @@ export default {
     }
   },
   watch: {
+    'orderInfo.cartype' (val) {
+      console.log('carttype', val)
+    },
     'orderInfo.deliveryway' () {
+      if (!this.loaded) return
       if (this.deliverWayText == '自提') {
         this.orderInfo.transportway = '0'
         this.orderInfo.cartype = ''
@@ -82,6 +88,7 @@ export default {
       this.bindCarType()
     },
     'orderInfo.transportway' (val) {
+      if (!this.loaded) return
       if (val == '1') {
         this.orderInfo.cartype = ''
       }
@@ -93,23 +100,21 @@ export default {
     }
   },
   created () {
-    this.axios.defaults.headers.common["token"] = localStorage.getItem('token');
-    this.axios.defaults.baseURL = "/api/teapi/dy-biz";
-    this.axios.interceptors.response.use((response) => {
-      return response;
-    }, (error) => {
-      const data = error.response.data
-      this.$dialog.alert({
-        title: '提示信息',
-        message: data.error_code
-      })
-      return Promise.reject(error);
-    });
-    this.query = {}
-    // const user = mpx.getStorageSync('distributionData')
-    // this.channelcode = user.customercode
-    // this.salesmanid = user.salesmanid
+    // localStorage.setItem('token', '${context.token}')
+  },
+  mounted () {
     this.init()
+    this.$xpe.on('refresh', () => {
+      this.init()
+    })
+    this.$xpe.on('setAddress', (data) => {
+      if (!data) return
+      const item = JSON.parse(data)
+      this.orderInfo.receiver = item.receiver
+      this.orderInfo.receivertel = item.receivertel
+      this.orderInfo.receiveraddr = item.receiveraddr
+      this.orderInfo.address = item.address
+    })
   },
   onShow () {
     if (!this.loaded) return
@@ -124,41 +129,44 @@ export default {
       return val === '' || val === null || val === undefined
     },
     async init () {
-      this.bindDeliverWay()
-      this.getCashaccount()
-      this.getDMSConfig()
+      this.$toast.loading({
+        message: '加载中...',
+        duration: 0
+      })
+        this.bindDeliverWay()
+        this.getCashaccount()
+        this.getDMSConfig()
       if (this.query.orderid) {
         await this.getData()
       } else {
         await this.getCacheData()
       }
+      this.$toast.clear()
+      this.loaded = true
     },
     async getDMSConfig () {
       const { feeconfig } = await this.axios({
-        url: '/1491976446623748195/1511693060906553432',
+        url: '/api/teapi/dy-biz/1491976446623748195/1511693060906553432',
         method: 'post',
         data: {
           ka_kq_channelcustomers: {
             channelcode: this.channelcode
           }
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.feeconfig = feeconfig
     },
     async getAddressList () {
       let list = await this.axios({
-        url: '/1108546657601065058/1128622639842201699',
+        url: '/api/teapi/dy-biz/1108546657601065058/1128622639842201699',
         method: 'post',
         data: {
           ka_kq_channelcustomers: {
-            customercode: this.customercode
+            customercode: this.channelcode
           }
         }
       }).then(res => {
-        const data = res.data.resp_data.kx_order
+        const data = res.kx_order
         return data
       })
       list = list.map(l => {
@@ -173,8 +181,8 @@ export default {
       }
     },
     async getCacheData () {
-      const { kx_order, kx_dms_order_detail } = await this.axios({
-        url: '/1491976446623748195/1486248650932883555',
+      let { kx_order, kx_dms_order_detail } = await this.axios({
+        url: '/api/teapi/dy-biz/1491976446623748195/1486248650932883555',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -182,9 +190,6 @@ export default {
             channelcode: this.channelcode
           }
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
       this.orderInfo = {
         ...this.orderInfo,
@@ -195,11 +200,15 @@ export default {
         this.carTypeText = ''
         this.orderInfo.cartype = ''
       }
-      this.orderDetail = kx_dms_order_detail.map(p => {
+      console.log(kx_dms_order_detail[0])
+      kx_dms_order_detail = kx_dms_order_detail[0] ? kx_dms_order_detail : [];
+      this.orderDetail = kx_dms_order_detail.map((p, i) => {
           const image = p.productimage ? JSON.parse(p.productimage) : []
           if (image.length > 0) {
-            const objectkey = image[0].source.slice(0, 3) + '/img/' + this.$dayjs(+image[0].datetime).format('YYYYMMDD') + '/' + this.tenantcode + '/' + image[0].source;
-            p.imageUrl = 'https://' + this.ossConfig.storageurl + '/' + objectkey
+            this.$OSS.getUrl('img', image[0]).then(url => {
+              p.imageUrl = url
+              this.orderDetail.splice(i, 1, p)
+            })
           }
           return p
       })
@@ -210,29 +219,39 @@ export default {
       this.loaded = true
     },
     async getData () {
-      const { kx_order, kx_dms_order_detail } = await this.axios({
-        url: '/1491976446623748195/1500664228380545075',
+      let { kx_order, kx_dms_order_detail } = await this.axios({
+        url: '/api/teapi/dy-biz/1491976446623748195/1499324260009775191',
         method: 'post',
         data: {
-          'kx_return_order': {
+          'kx_order': {
             id: this.query.orderid
           }
         }
-      }).then(res => {
-        const data = res.data.resp_data
-        return data
       })
-      console.log(this.loaded)
+      console.log(this.loaded, kx_order)
       if (!this.loaded) {
         this.orderInfo = {
           ...this.orderInfo,
           ...kx_order,
           address: kx_order.receiveraddr ? JSON.parse(kx_order.receiveraddr).address : ''
         }
+        await this.bindCarType()
+        this.orderInfo.cartype = kx_order.cartype
+        console.log(this.orderInfo)
       }
       // console.log(kx_dms_order_detail)
       if (!['10', '100'].includes(kx_order.status)) {
-        this.orderDetail = kx_dms_order_detail
+        kx_dms_order_detail = kx_dms_order_detail[0] ? kx_dms_order_detail : [];
+        this.orderDetail = kx_dms_order_detail.map((p, i) => {
+            const image = p.productimage ? JSON.parse(p.productimage) : []
+            if (image.length > 0) {
+              this.$OSS.getUrl('img', image[0]).then(url => {
+                p.imageUrl = url
+                this.orderDetail.splice(i, 1, p)
+              })
+            }
+            return p
+        })
         this.carTypeText = this.orderInfo.carname
       } else {
         await this.getCacheData()
@@ -275,7 +294,7 @@ export default {
         })
         return
       }
-      if (this.deliverWayText !== '自提' && this.postWayText !== '拼车') {
+      if (this.deliverWayText !== '自提' && this.postWayText !== '1') {
         if (this.isEmpty(this.orderInfo.cartype)) {
           this.$dialog.alert({
             title: '提示信息',
@@ -293,30 +312,34 @@ export default {
           return
         }
       }
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 0,
+      })
+      console.log('rtetetet')
       await this.axios({
-        url: '/1491976446623748195/1493824241152430174',
+        url: '/api/teapi/dy-biz/1491976446623748195/1493824241152430174',
         method: 'post',
         data: {
-            kx_order: {
-              ...this.orderInfo,
-              status,
-              create_object: '1',
-              ordersourceid: '3',
-              expectedtime: this.orderInfo.expectedtime ? '' + this.orderInfo.expectedtime.getTime() : '',
-              customercode: this.channelcode,
-              salesmanid: this.salesmanid
-            },
-            kx_dms_order_detail: this.orderDetail
-          }
-      }).then(res => {
-        console.log(res)
-        const data = res.data.resp_data
-        return data
+          kx_order: {
+            ...this.orderInfo,
+            status,
+            create_object: '1',
+            ordersourceid: '3',
+            expectedtime: this.orderInfo.expectedtime ? '' + this.dayjs(+this.orderInfo.expectedtime).valueOf() : '',
+            customercode: this.channelcode,
+            salesmanid: this.salesmanid
+          },
+          kx_dms_order_detail: this.orderDetail
+        }
       })
+      this.$toast.clear()
+      this.$xpe.emit('submited')
     },
     async getCashaccount () {
       const obj = await this.axios({
-        url: '/1491976446623748195/1501496324988735583',
+        url: '/api/teapi/dy-biz/1491976446623748195/1501496324988735583',
         method: 'post',
         data: {
           'ka_kq_channelcustomers': {
@@ -324,14 +347,14 @@ export default {
           }
         }
       }).then(res => {
-        const data = res.data.resp_data.kx_cashaccount
+        const data = res.kx_cashaccount
         return data
       })
       this.cashAccount = obj
     },
     async bindDeliverWay () {
       const list = await this.axios({
-        url: '/100000000000000001/100000000001100001',
+        url: '/api/teapi/dy-biz/100000000000000001/100000000001100001',
         method: 'post',
         data: {
           pl_dictionary: {
@@ -344,15 +367,14 @@ export default {
           }
         }
       }).then(res => {
-        const data = res.data.resp_data.pl_dictionary
+        const data = res.pl_dictionary
         return data.map(d => ({ ...d, text: d.dicvalue, key: d.dickey }))
       })
-      console.log('de', list)
       this.deliveryWay = list
     },
     async bindCarType () {
       const list = await this.axios({
-        url: '/1501475108701737027/1501475108701737026',
+        url: '/api/teapi/dy-biz/1501475108701737027/1501475108701737026',
         method: 'post',
         data: {
           'kx_car_model': {
@@ -363,7 +385,7 @@ export default {
           }
         }
       }).then(res => {
-        const data = res.data.resp_data.kx_car_model
+        const data = res.kx_car_model
         return data.map(cm => ({ ...cm, key: cm.car_serial_number, text: cm.car_serial_name }))
       })
       console.log(list)
@@ -384,14 +406,18 @@ export default {
       this.showDatetime = !this.showDatetime
     },
     toCost () {
+      this.$xpe.emit('toCost', { amount: this.orderInfo.finalamount })
     },
     toCargo () {
+      this.$xpe.emit('toCargo', { amount: this.orderInfo.finalamount })
     },
     toogleAddressList () {
       if (this.disabled) return
-      this.isChooseAddres = true
+      // this.isChooseAddres = true
+      this.$xpe.emit('chooseAddress')
     },
     toEdit () {
+      this.$xpe.emit('toEditCart')
     },
     onSelectAddress (e) {
       this.orderInfo.receiver = e.detail.receiver
@@ -403,7 +429,7 @@ export default {
   },
   render () {
     return (
-      <div class={ ['order-detail', this.editable ? 'padding-bottom' : '' ]}>
+      <div class={ ['order-detail', this.editable ? 'padding-bottom editable' : '' ]}>
         <div class="order-content">
           <div class="adress-content" on-click={this.toogleAddressList}>
             <div class="address-wrap">
@@ -470,20 +496,28 @@ export default {
                { (this.orderInfo.expectedtime || this.disabled) && (
                 <div class="val">{this.dateTime}</div>
                )}
+               {this.editable && !this.dateTime && (
+                 <div class="placehold">请选择</div>
+               )}
                {this.editable && (
                  <van-icon name={this.arrowIcon} size="16" color="#CCC" class="arrow" />
                )}
               </div>
             </div>
             <div class="field-cell">
-              <label class="lable">开票类型</label>
+              <label class="lable require">开票类型</label>
               <div class="value">
                 <select
+                  required
+                  dir="rtl"
                   class="cell-input"
                   placeholder={this.editable ? '请选择' : '' }
                   v-model={this.orderInfo.billtype}
                   disabled={this.disabled}
                 > 
+                  {this.editable && (
+                    <option value="" disabled selected style="color: #cccccc">请选择</option>
+                  )}
                   {this.billType.map(item => (
                     <option value={item.key} key={item.key}>{item.text}</option>
                   ))}
@@ -500,15 +534,20 @@ export default {
               </div>
             </div>
             <div class="field-cell">
-              <label class="label">送货方式</label>
+              <label class="label require">送货方式</label>
               <div class="value">
                 <select
+                  required
+                  dir="rtl"
                   class="cell-input"
                   v-model={this.orderInfo.deliveryway}
                   placeholder={this.editable ? '请选择' : '' }
                   bind:change="chooseDeliver"
                   disabled={this.disabled}
                 >
+                  {this.editable && (
+                    <option value="" disabled selected style="color: #cccccc">请选择</option>
+                  )}
                   {this.deliveryWay.map(item => (
                     <option value={item.key} key={item.key}>{item.text}</option>
                   ))}
@@ -525,15 +564,20 @@ export default {
               </div>
             </div>
             <div class="field-cell">
-              <label class="label">运输方式</label>
+              <label class="label require">运输方式</label>
               <div class="value">
                 <select
+                  required
+                  dir="rtl"
                   class="cell-input"
                   bind:change="choosePostWay"
                   placeholder={this.editable ? '请选择' : '' }
                   v-model={this.orderInfo.transportway}
                   disabled={this.disabled || this.deliverWayText == '自提'}
                 >
+                  {this.editable && (
+                    <option value="" disabled selected style="color: #cccccc">请选择</option>
+                  )} 
                   {this.postWay.map(item => (
                     <option value={item.key} key={item.key}>{item.text}</option>
                   ))}
@@ -550,16 +594,17 @@ export default {
               </div>
             </div>
             <div class="field-cell">
-              <div class={['lable', this.postWayText == '拼车' ? 'require' : '' ]}>
+              <div class={['lable', this.orderInfo.transportway === '1' ? 'require' : '' ]}>
                 拼单号
               </div>
               <div class="value">
                 <input
                   v-model={this.orderInfo.spellorderid}
                   class="cell-input"
-                  disabled={this.disabled || this.postWayText == '整车'}
+                  disabled={this.disabled || this.orderInfo.transportway === '0'}
+                  placeholder={this.editable && this.orderInfo.transportway !== '0'  ? "请输入" : ''}
                 />
-                {this.editable && (
+                {/*this.editable && (
                   <van-icon 
                     name={this.arrowIcon}
                     size="16"
@@ -567,19 +612,26 @@ export default {
                     class="arrow"
                     style="visibility: hidden"
                   />
-                )}
+                )*/}
               </div>
             </div>
             <div class="field-cell">
-              <label class="label">适用车型</label>
+              <label class={['label', this.orderInfo.transportway === '1' || this.deliverWayText == '自提' ? '' : 'require']}>
+                适用车型
+              </label>
               <div class="value">
                 <select
+                  required
+                  dir="rtl"
                   class="cell-input"
                   v-model={this.orderInfo.cartype}
                   bind:change="chooseCarType"
                   place
-                  disabled={this.disabled || this.postWayText == '拼车' || this.deliverWayText == '自提' }
+                  disabled={this.disabled || this.orderInfo.transportway === '1' || this.deliverWayText == '自提' }
                 >
+                  {this.editable && (
+                    <option value="" disabled selected style="color: #cccccc">请选择</option>
+                  )}
                   {this.carType.map(item => (
                     <option value={item.key} key={item.key}>{item.text}</option>
                   ))}
@@ -604,8 +656,9 @@ export default {
                   v-model={this.orderInfo.remark}
                   placeholder-class="placehold"
                   disabled={this.disabled}
+                  placeholder={this.editable ? "请输入" : ''}
                 />
-                {this.editable && (
+                {/*this.editable && (
                   <van-icon 
                     name={this.arrowIcon}
                     size="16"
@@ -613,7 +666,7 @@ export default {
                     class="arrow"
                     style="visibility: hidden"
                   />
-                )}
+                )*/}
               </div>
             </div>
           </div>
