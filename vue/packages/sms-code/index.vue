@@ -112,7 +112,7 @@ export default {
           },
           {
             type: 'text',
-            text: '扫一扫下面的小程序码，加入门店',
+            text: '扫一扫下面的小程序码，注册RMS门店',
             css: {
               left: '0px',
               top: `${180 * 10}px`,
@@ -164,6 +164,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.query.appid)
     this.$xpe.on('shared', () => {
       this.showBtn = true
     })
@@ -171,21 +172,23 @@ export default {
       message: '加载中...',
       forbidClick: true,
     })
-    this.$http.post('/miniapi/sms/getqrcode',{
+    this.axios.post('/miniapi/sms/getrmsqrcode',{
       appid: this.query && this.query.appid,
       path: '/pages/login/login',
       storeId: this.query && this.query.storeInfo && this.query.storeInfo.storeid,
       storeName: this.query && this.query.storeInfo && this.query.storeInfo.storename,
+      storeCode: this.query && this.query.storeInfo && this.query.storeInfo.storecode,
+      customerType: this.query && this.query.storeInfo && this.query.storeInfo.customertype,
       codeType: '1',
       // openId: this.user.openId,
       line_color: { r: 0, g: 0, b: 0 }
-    }).then(res => res.data.resp_data).then(res => {
-      this.$http.post('/api/teapi/rolepermission/account/getaccountinfo',{
+    }).then(res => {
+      this.axios.post('/api/teapi/rolepermission/account/getaccountinfo',{
         "positionid": this.query.user.positionID,
         "deviceinfo":"Chrome",
         "sysversion":"",
         "clientversion":"V9.5.1"
-      }).then(res => res.data.resp_data).then(userinfo => {
+      }).then(userinfo => {
         if (userinfo.photo) {
           const photo = JSON.parse(userinfo.photo)[0]
           var arr = res.qrCodeUrl.split('/')
@@ -217,7 +220,10 @@ export default {
     },
     saveImg() {
       if (!this.canSave) return;
-      this.$xpe.bridge('saveImage', this.poster)
+      const u = navigator.userAgent;
+      const isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;
+      let reg = /data.+?;base64,/;
+      this.$xpe.bridge('saveImage', isAndroid ? this.poster : this.poster.replace(reg,''))
     },
     onShare () {
       this.showBtn = false
@@ -254,9 +260,9 @@ export default {
     .btn {
       display: block;
       padding: 0;
-      margin: 0 38px;
+      margin: 0 28px;
       text-align: center;
-      width: 80px;
+      width: 100px;
       font-size: font-md;
       color: #999999;
       img {
