@@ -97,7 +97,7 @@ export default {
     init() {
       this.info = { ...this.protocol };
       this.info.col.forEach((i, index) => {
-        if (!Object.keys(i).indexOf("isshow") || i.isshow === true) {
+        if (Object.keys(item).indexOf("isshow") === -1 || i.isshow === true) {
           console.log("show");
         } else {
           this.notShowIndex.push(index);
@@ -119,7 +119,7 @@ export default {
       this.col.map((item) => {
         if (
           item.colwidth &&
-          (Object.keys(item).indexOf("isshow") === -1 || item.isshow === true)
+          (!Object.keys(item).indexOf('isshow') || item.isshow === true)
         ) {
           // if (item.colwidth) {
           this.totalwidth += +item.colwidth;
