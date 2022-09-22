@@ -112,7 +112,7 @@ export default {
           },
           {
             type: 'text',
-            text: '扫一扫下面的小程序码，注册RMS门店',
+            text: this.query.scanText || '扫一扫下面的小程序码，注册门店',
             css: {
               left: '0px',
               top: `${180 * 10}px`,
