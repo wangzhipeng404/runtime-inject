@@ -97,7 +97,7 @@ export default {
     init() {
       this.info = { ...this.protocol };
       this.info.col.forEach((i, index) => {
-        if (Object.keys(item).indexOf("isshow") === -1 || i.isshow === true) {
+        if (Object.keys(i).indexOf("isshow") === -1 || i.isshow === true) {
           console.log("show");
         } else {
           this.notShowIndex.push(index);
