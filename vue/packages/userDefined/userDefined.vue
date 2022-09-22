@@ -16,7 +16,7 @@
             :style="{
               width: `${item.colwidth}px`,
               display:
-                !Object.keys(item).indexOf('isshow') || item.isshow === true
+                Object.keys(item).indexOf('isshow') === -1 || item.isshow === true
                   ? 'table-cell'
                   : 'none',
             }"
@@ -104,7 +104,7 @@ export default {
         }
       });
       this.col = this.info.col;
-      console.log("this.notShowIndex", this.notShowIndex);
+      // console.log("this.notShowIndex", this.notShowIndex);
       this.url = this.info.url;
       if (this.protocol.bind && this.protocol.bind.logiccode) {
         this.queryurl = this.protocol.bind.logiccode;
@@ -115,10 +115,11 @@ export default {
       this.modifyScreen();
     },
     modifyScreen() {
+      this.totalwidth = 0
       this.col.map((item) => {
         if (
           item.colwidth &&
-          (!Object.keys(item).indexOf("isshow") || item.isshow === true)
+          (Object.keys(item).indexOf("isshow") === -1 || item.isshow === true)
         ) {
           // if (item.colwidth) {
           this.totalwidth += +item.colwidth;
@@ -127,11 +128,11 @@ export default {
         this.$nextTick(() => {
           if (this.totalwidth < this.screenX) {
             this.widthTable = this.screenX - 48;
-            console.log(this.col);
-            console.log(this.screenX);
-            console.log(this.widthTable);
-            console.log(this.totalwidth);
-            console.log(this.widthTable / this.totalwidth);
+            // console.log(this.col);
+            // console.log(this.screenX);
+            // console.log(this.widthTable);
+            // console.log(this.totalwidth);
+            // console.log(this.widthTable / this.totalwidth);
             this.col.map(
               (i) => (i.colwidth *= this.widthTable / this.totalwidth)
             );
