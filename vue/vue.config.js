@@ -5,6 +5,16 @@ module.exports = {
       stylus: 'stylus'
     }
   },
+  css: { 
+    extract: false 
+  },
+  chainWebpack: config => {
+    config.module
+      .rule('images')
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(options => Object.assign(options, { limit: 20000 }))
+  },
   devServer: {
     contentBase: ['public', 'dist'],
     proxy: {
