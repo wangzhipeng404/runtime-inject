@@ -8,12 +8,15 @@ import * as echarts from 'echarts';
 import myRequire from './utils/require'
 import xpe from './utils/xpe'
 import OSSCreater from './utils/OSS/oss'
+import Image from './components/Image.vue'
 
 Vue.prototype.$echarts = echarts
 Vue.use(Vant);
 Vue.use(VueAxios, axios)
 Vue.use(myRequire)
 Vue.use(xpe)
+
+Vue.component('oss-image', Image)
 
 Vue.prototype.$imagePreview = ImagePreview
 Vue.config.productionTip = false

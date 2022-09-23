@@ -469,10 +469,10 @@ export default {
                     {item.image_url && (
                       <van-icon name={item.image_url} size="32px" class="image-icon" />
                     )}
-                    <van-image
+                    <oss-image
                       width="90"
                       height="90"
-                      src={item.imageUrl}
+                      value={item.productimage}
                     />
                   </div>
                   <div class="item-right">
