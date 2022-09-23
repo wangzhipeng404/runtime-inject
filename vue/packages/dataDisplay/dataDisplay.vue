@@ -101,11 +101,11 @@ export default {
   }
   .top{
       display: flex;
-      // flex-wrap: wrap;
+      flex-wrap: wrap;
       // width: 100%;
       .moduleTitle{
         padding-bottom: 6px;
-        width: 70%;
+        width: 80%;
         .bigTitle{
           padding-right: 8px;
           color:#303133;
@@ -126,11 +126,11 @@ export default {
         padding-top: 3px;
         color:#C0C4CC;
         font-size: 12px;
-        width: 30%;
+        width: 20%;
       }
       .arrow{
         text-align:right;
-        width: 30%;
+        width: 20%;
       }
     }
   .item::-webkit-scrollbar {

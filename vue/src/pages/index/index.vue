@@ -77,6 +77,13 @@ export default {
       "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NjM4NDEwMTksIkxvZ2luVXNlciI6eyJhY2NvdW50SW5mb0NvZGUiOiIxNTU0MDgwNTU4NDQxNjk3MjgwIiwiYWNjb3VudENvZGUiOiIxNTU0MDgwNTU4Mzc4NzgyNzIwIiwidGVuYW50Q29kZSI6IjEwMDAwNjEiLCJwcm9kdWN0Q29kZSI6IjEwMDAwMDAwMDAwMDAwMDAwMCIsInByb2R1Y3RWZXJzaW9uQ29kZSI6IjEwMDAwMDAwMDAwMDAwMDA2MSIsImNsaWVudFR5cGVDb2RlIjoxLCJ0b2tlbklkIjoiZDI5OWJhZDMtZWZhMS00NzliLTllODAtNzdhOTA0MjM3YjVjIiwib3JnQ29kZSI6IjEiLCJ1c2VySW5mb0lkIjoiMTU1NDA4MDU1OTA3NTAzNzE4NCIsInVzZXJJbmZvTmFtZSI6IumZiOeVhSIsInBvc2l0aW9uQ29kZSI6IjE1NTQ3ODA5NzgxMjYzOTMzNDQiLCJwb3NpdGlvbk5hbWUiOiLlhajmnYPpmZAt5Yu_5YigIiwibWVtYmVyQ29kZSI6IjE1NTQ3ODE4ODg0NTgxMzM1MDQiLCJyZWZQb3NpdGlvbkNvZGUiOiIxMzAwNzI4NjE0NTM0Mzg1NjY0IiwiY2F0ZWdvcnlDb2RlIjoiIiwib3JnU3RydWN0VHlwZUlkIjoiMSIsInVzZXJOYW1lIjoiMTAwMDA2MSIsInVzZXJOYW1lMSI6IjEwMDAwNjEiLCJ1c2VyTmFtZTIiOiI2NTQ3ODkxMjM0NSIsInVzZXJOYW1lMyI6bnVsbCwidGVuYW50TmFtZSI6IuaZuuaFpzEwMFY2LjEtYmFzZeS6p-WTgeenn-aItyIsImFwcENvZGUiOiJzYWxlcyIsImFwcENvZGVzIjpbImRpc3RyaWJ1dGlvbiIsInNhbGVzIiwicHJvbW90aW9uIl0sInN1YlBkQ29kZXMiOlsic2ZhIiwiZG1zIiwicG1tIiwidHBtIl0sImNvZGVwYXRoIjoiMS4iLCJpc2xlYWZvcmciOiJmYWxzZSIsIm1ldGFtb2RlbHR5cGUiOjEsImlzU21zTG9naW4iOmZhbHNlfX0.E_AhPEcsiuYLGV5n8KQSPFuxbHHVFkeTiIKomhbFlSQ";
     this.axios.defaults.baseURL =
       "http://101.200.205.231:7000/api/teapi/dy-biz";
+    this.axios.interceptors.response.use((data) => {
+      return { 
+        data: {
+          resp_data: data
+        }
+      }
+    })
     this.axios
       .post("/1555440697476255841/1555440697476255840", {
         protocol: {
@@ -85,7 +92,7 @@ export default {
       })
       .then((res) => {
         console.log(res)
-        this.content = JSON.parse(res.sys_platfrom_config.protocol.protocol).view.body.content
+        this.content = JSON.parse(res.data.resp_data.sys_platfrom_config.protocol.protocol).view.body.content
         console.log(this.content)
         // this.content = [
         //   {
