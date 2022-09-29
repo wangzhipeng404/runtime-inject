@@ -235,7 +235,7 @@
               "appealjson": JSON.stringify(list),
               "resultjson": JSON.stringify(result),
               "remark": this.message,
-              "source": "1",
+              "source": this.query.source,
               "type": this.type,
               "storeid":this.query.storeId,
             }))
@@ -248,7 +248,7 @@
               "appealjson": JSON.stringify(list),
               "resultjson": JSON.stringify(result),
               "remark": this.message,
-              "source": "1",
+              "source": this.query.source,
               "type": this.type,
               "storeid":this.query.storeId,
             }
